@@ -20,12 +20,15 @@
 //
 // DgInGdalFile.h: DgInGdalFile class definitions
 //
-// Version 7.0 - Elijah Anderson-Justis, 5/20/17
+// Version 7.0b - Kevin Sahr, 7/15/19
+// Version 6.9 - Elijah Anderson-Justis, 5/20/17
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef DGINGDALFILE_H
 #define DGINGDALFILE_H
+
+#include <ogrsf_frmts.h>
 
 #include "DgInLocTextFile.h"
 
@@ -40,24 +43,13 @@ public:
     DgInGDALFile (const DgRFBase& rfIn, const string* fileNameIn = NULL,
                    DgReportLevel failLevel = DgBase::Fatal);
 
-    bool forcePolyLine (void) const
-    {
-        return forcePolyLine_;
-    }
-    bool forceCells    (void) const
-    {
-        return forceCells_;
-    }
+    bool forcePolyLine (void) const { return forcePolyLine_; }
+    bool forceCells    (void) const { return forceCells_; }
 
-    void setForcePolyLine (bool forcePolyLine = false)
-    {
-        forcePolyLine_ = forcePolyLine;
-    }
+    void setForcePolyLine (bool forcePolyLine = false) 
+                           { forcePolyLine_ = forcePolyLine; }
 
-    void setForceCells (bool forceCells = false)
-    {
-        forceCells_ = forceCells;
-    }
+    void setForceCells (bool forceCells = false) { forceCells_ = forceCells; }
 
     virtual DgInLocFile& extract (DgLocList& list);
     virtual DgInLocFile& extract (DgLocVector& vec);
@@ -69,6 +61,13 @@ private:
 
     bool forcePolyLine_;
     bool forceCells_;
+
+    GDALDataset* gdalDataset_;
+    int curLayer_;
+    bool insideMultiPoly_;
+    OGRMultiPolygon* oMultiPolygon_;
+    int multiPolyIndex_;
+    int numMultiPolyGeometries_;
 
 };
 

@@ -20,7 +20,8 @@
 //
 // DgInGDALFile.cpp: DgInGDALFile class implementation
 //
-// Version 7.0 - Elijah Anderson-Justis, 5/20/17
+// Version 7.0b - Kevin Sahr, 7/15/19
+// Version 6.9 - Elijah Anderson-Justis, 5/20/17
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -38,11 +39,19 @@
 DgInGDALFile::DgInGDALFile (const DgRFBase& rfIn, const string* fileNameIn,
                               DgReportLevel failLevel)
     : DgInLocTextFile (rfIn, fileNameIn, false, failLevel),
-      forcePolyLine_ (false), forceCells_ (false)
+      forcePolyLine_ (false), forceCells_ (false),
+      gdalDataset_ (NULL), curLayer_ (0), insideMultiPoly_ (false),
+      oMultiPolygon_ (NULL), multiPolyIndex_ (0), numMultiPolyGeometries_ (0)
 {
     if (rfIn.vecAddress(DgDVec2D(0.0L, 0.0L)) == 0) {
         report("DgInGDALFile::DgInGDALFile(): RF " + rfIn.name() +
                " must override the vecAddress() method", DgBase::Fatal);
+    }
+
+    gdalDataset_ = (GDALDataset*) GDALOpenEx(fileName().c_str(), 
+                                        GDAL_OF_VECTOR, NULL, NULL, NULL);
+    if (gdalDataset_ == NULL) {
+        report("Invalid GDAL data model in file " + fileName(), DgBase::Fatal);
     }
 
 } // DgInGDALFile::DgInGDALFile
@@ -71,53 +80,56 @@ DgInGDALFile::extract (DgPolygon& poly)
 {
     poly.clearAddress();
     rf().convert(poly);
-    // A GDALDataset is an abstraction over the data provided by a file
-    GDALDataset* gdalDataset;
-    gdalDataset = (GDALDataset*) GDALOpenEx(fileName().c_str(), GDAL_OF_VECTOR, NULL, NULL, NULL);
-    if (gdalDataset == NULL) {
-        report("Opening file failed.", DgBase::Fatal);
-    }
 
-    static int layer = 0;
-    OGRLayer* oLayer;
-    if (layer < gdalDataset->GetLayerCount()) {
-        oLayer = gdalDataset->GetLayer(layer++);
-    } else {
-        setstate(ios_base::eofbit);
-        return *this;
-    }
-
-    OGRFeature* oFeature;
-    if ((oFeature = oLayer->GetNextFeature()) == NULL) {
-        setstate(ios_base::eofbit);
-        return *this;
-    }
-
-    // Get the polygon stored in Geometry, with special handling for MultiPolygon
-    OGRGeometry* oGeometry = oFeature->GetGeometryRef();
     OGRPolygon* oPolygon = NULL;
-    if (oGeometry != NULL &&
-        wkbFlatten((oGeometry->getGeometryType()) == wkbPolygon)) {
-        oPolygon = (OGRPolygon*) oGeometry;
-    } else if (oGeometry->getGeometryType() == wkbMultiPolygon) {
-        static int ndx = 0;
-        OGRMultiPolygon* oMultiPolygon = (OGRMultiPolygon*) oGeometry;
-        int numGeometries = oMultiPolygon->getNumGeometries();
-        if (ndx < numGeometries) {
-            oPolygon = (OGRPolygon*) oMultiPolygon->getGeometryRef(ndx++);
-        } else {
-            setstate(ios_base::eofbit);
-            return *this;
-        }
+    if (!insideMultiPoly_) {
+
+       OGRLayer* oLayer;
+       if (curLayer_ < gdalDataset_->GetLayerCount()) {
+           oLayer = gdalDataset_->GetLayer(curLayer_++);
+       } else {
+           setstate(ios_base::eofbit);
+           return *this;
+       }
+
+       OGRFeature* oFeature;
+       if ((oFeature = oLayer->GetNextFeature()) == NULL) {
+           setstate(ios_base::eofbit);
+           return *this;
+       }
+
+       // Get the polygon stored in Geometry, with special handling for MultiPolygon
+       OGRGeometry* oGeometry = oFeature->GetGeometryRef();
+       if (oGeometry != NULL &&
+           wkbFlatten((oGeometry->getGeometryType()) == wkbPolygon)) {
+           oPolygon = (OGRPolygon*) oGeometry;
+       } else if (oGeometry->getGeometryType() == wkbMultiPolygon) {
+           insideMultiPoly_ = true;
+           multiPolyIndex_ = 0;
+           oMultiPolygon_ = (OGRMultiPolygon*) oGeometry;
+           numMultiPolyGeometries_ = oMultiPolygon_->getNumGeometries();
+       }
     } else {
         report("Geometry is not of type Polygon or MultiPolygon", DgBase::Fatal);
     }
 
+    // now we either have a polygon or we are inside a multi-polygon
+    if (insideMultiPoly_) {
+       oPolygon = (OGRPolygon*) oMultiPolygon_->getGeometryRef(multiPolyIndex_);
+       multiPolyIndex_++;
+       // check if we're at the end of the multipolygon
+       if (multiPolyIndex_ >= numMultiPolyGeometries_) {
+          insideMultiPoly_ = false;
+          multiPolyIndex_ = 0;
+          oMultiPolygon_ = NULL;
+          numMultiPolyGeometries_ = 0;
+       }
+    }
+       
     // Now we get the points out of the Polygon
     // You can't iterate over the points of an OGRPolygon
     // We need to cast it to an OGRLinearRing
     OGRLinearRing* oLinearRing = oPolygon->getExteriorRing();
-
     int numPoints = oLinearRing->getNumPoints();
     long double x, y;
     OGRPoint oPoint;
@@ -128,8 +140,12 @@ DgInGDALFile::extract (DgPolygon& poly)
         DgAddressBase* add = rf().vecAddress(DgDVec2D(x, y));
         poly.addressVec().push_back(add);
     }
+
+    // remove the duplicate first/last vertex
     poly.addressVec().erase(poly.addressVec().end() - 1);
+
     return *this;
+
 } // DgInGDALFile& DgInGDALFile::extract
 
 ////////////////////////////////////////////////////////////////////////////////

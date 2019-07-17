@@ -12,4 +12,5 @@ for f in ${examples[@]}
 do
    echo \*\* cleaning example $f
    rm -f ${f}/outputfiles/*
+   touch ${f}/outputfiles/.keep
 done

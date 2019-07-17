@@ -13,4 +13,5 @@ do
    echo \*\* copy example $f
    rm sampleOutput/${f}/*
    cp ${f}/outputfiles/* sampleOutput/${f}
+   touch sampleOutput/${f}/.keep
 done

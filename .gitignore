@@ -36,6 +36,7 @@ src/apps/dggrid/dggrid
 
 # examples output files
 examples*/*/outputfiles/*
+!examples*/*/outputfiles/.keep
 
 # miscellaneous
 g
