@@ -1,6 +1,6 @@
 ################################################################################
 #
-# culmenUSA.meta - example of a DGGRID metafile that generates a resolution 
+# culmenGeoJSON.meta - example of a DGGRID metafile that generates a resolution 
 #     19 Culmen/PlanetRisk grid for a polygon over the Alexandria HQ of
 #     Culmen International.
 #
