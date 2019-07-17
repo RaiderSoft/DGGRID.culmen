@@ -1019,7 +1019,7 @@ void genGrid (GridGenParam& dp)
 
    dp.prChdOut = NULL;
    if (!dp.prChildrenOutType.compare("PRTEXT"))
-      dp.prChdOut = new DgOutPRChildrenFile(prNeighborsOutFileName, "chd");
+      dp.prChdOut = new DgOutPRChildrenFile(prChildrenOutFileName, "chd");
 
    ////// do whole earth grid if applicable /////
 

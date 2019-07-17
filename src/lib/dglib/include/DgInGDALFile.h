@@ -64,8 +64,8 @@ private:
 
     GDALDataset* gdalDataset_;
     int curLayer_;
+    OGRFeature* oFeature_;
     bool insideMultiPoly_;
-    OGRMultiPolygon* oMultiPolygon_;
     int multiPolyIndex_;
     int numMultiPolyGeometries_;
 

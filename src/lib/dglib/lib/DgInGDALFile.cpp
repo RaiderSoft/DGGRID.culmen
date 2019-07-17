@@ -40,8 +40,8 @@ DgInGDALFile::DgInGDALFile (const DgRFBase& rfIn, const string* fileNameIn,
                               DgReportLevel failLevel)
     : DgInLocTextFile (rfIn, fileNameIn, false, failLevel),
       forcePolyLine_ (false), forceCells_ (false),
-      gdalDataset_ (NULL), curLayer_ (0), insideMultiPoly_ (false),
-      oMultiPolygon_ (NULL), multiPolyIndex_ (0), numMultiPolyGeometries_ (0)
+      gdalDataset_ (NULL), curLayer_ (0), oFeature_ (NULL), 
+      insideMultiPoly_ (false), multiPolyIndex_ (0), numMultiPolyGeometries_ (0)
 {
     if (rfIn.vecAddress(DgDVec2D(0.0L, 0.0L)) == 0) {
         report("DgInGDALFile::DgInGDALFile(): RF " + rfIn.name() +
@@ -84,44 +84,51 @@ DgInGDALFile::extract (DgPolygon& poly)
     OGRPolygon* oPolygon = NULL;
     if (!insideMultiPoly_) {
 
-       OGRLayer* oLayer;
+       if (gdalDataset_->GetLayerCount() != 1) {
+          report("Multiple layers in input file.", DgBase::Fatal);
+       }
+
+       OGRLayer* oLayer = gdalDataset_->GetLayer(0);
+/*
        if (curLayer_ < gdalDataset_->GetLayerCount()) {
            oLayer = gdalDataset_->GetLayer(curLayer_++);
        } else {
            setstate(ios_base::eofbit);
            return *this;
        }
-
-       OGRFeature* oFeature;
-       if ((oFeature = oLayer->GetNextFeature()) == NULL) {
+*/
+       if ((oFeature_ = oLayer->GetNextFeature()) == NULL) {
            setstate(ios_base::eofbit);
            return *this;
        }
 
        // Get the polygon stored in Geometry, with special handling for MultiPolygon
-       OGRGeometry* oGeometry = oFeature->GetGeometryRef();
-       if (oGeometry != NULL &&
-           wkbFlatten((oGeometry->getGeometryType()) == wkbPolygon)) {
+       OGRGeometry* oGeometry = oFeature_->GetGeometryRef();
+       OGRwkbGeometryType geomType = wkbFlatten((oGeometry->getGeometryType()));
+       OGRMultiPolygon* oMultiPolygon;
+       if (oGeometry != NULL && geomType == wkbPolygon) {
            oPolygon = (OGRPolygon*) oGeometry;
-       } else if (oGeometry->getGeometryType() == wkbMultiPolygon) {
+       } else if (geomType == wkbMultiPolygon || geomType == wkbGeometryCollection) {
            insideMultiPoly_ = true;
            multiPolyIndex_ = 0;
-           oMultiPolygon_ = (OGRMultiPolygon*) oGeometry;
-           numMultiPolyGeometries_ = oMultiPolygon_->getNumGeometries();
+           OGRMultiPolygon* oMultiPolygon = (OGRMultiPolygon*) oGeometry;
+           numMultiPolyGeometries_ = oMultiPolygon->getNumGeometries();
+       } else {
+           cout << "WKBGeometryType: " << geomType << endl;
+           report("Geometry is not of type Polygon or MultiPolygon", DgBase::Fatal);
        }
-    } else {
-        report("Geometry is not of type Polygon or MultiPolygon", DgBase::Fatal);
     }
 
     // now we either have a polygon or we are inside a multi-polygon
     if (insideMultiPoly_) {
-       oPolygon = (OGRPolygon*) oMultiPolygon_->getGeometryRef(multiPolyIndex_);
+       OGRGeometry* oGeometry = oFeature_->GetGeometryRef();
+       OGRMultiPolygon* oMultiPolygon = (OGRMultiPolygon*) oGeometry;
+       oPolygon = (OGRPolygon*) oMultiPolygon->getGeometryRef(multiPolyIndex_);
        multiPolyIndex_++;
        // check if we're at the end of the multipolygon
        if (multiPolyIndex_ >= numMultiPolyGeometries_) {
           insideMultiPoly_ = false;
           multiPolyIndex_ = 0;
-          oMultiPolygon_ = NULL;
           numMultiPolyGeometries_ = 0;
        }
     }
@@ -140,6 +147,8 @@ DgInGDALFile::extract (DgPolygon& poly)
         DgAddressBase* add = rf().vecAddress(DgDVec2D(x, y));
         poly.addressVec().push_back(add);
     }
+   
+    //if (oFeature_) OGRFeature::DestroyFeature(oFeature_);
 
     // remove the duplicate first/last vertex
     poly.addressVec().erase(poly.addressVec().end() - 1);

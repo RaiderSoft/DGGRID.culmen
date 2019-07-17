@@ -18,12 +18,12 @@ dggs_res_spec 19
 
 # control grid generation
 clip_subset_type GDAL
-clip_region_files ./inputfiles/CulmenUSA.geojson
+clip_region_files ./inputfiles/AlexandriaOffice.geojson
 # increase granularity of the clipping algorithm for high res
 clipper_scale_factor 1000000000
 
 # specify the output
 cell_output_type KML
-cell_output_file_name ./outputfiles/culmenCells
+cell_output_file_name ./outputfiles/AlexandriaOfficeCells
 densification 0
 

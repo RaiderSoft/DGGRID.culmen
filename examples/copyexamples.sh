@@ -11,7 +11,7 @@ examples=( `cat examples.lst` )
 for f in ${examples[@]}
 do
    echo \*\* copy example $f
-   rm sampleOutput/${f}/*
+   rm -f sampleOutput/${f}/*
    cp ${f}/outputfiles/* sampleOutput/${f}
    touch sampleOutput/${f}/.keep
 done
