@@ -135,16 +135,12 @@ GridGenParam::GridGenParam (DgParamList& plist)
       getParamValue(plist, "cell_output_type", cellOutType, "NONE");
       getParamValue(plist, "point_output_type", pointOutType, "NONE");
       getParamValue(plist, "randpts_output_type", randPtsOutType, "NONE");
-      getParamValue(plist, "planetrisk_cell_output_type", prCellOutType, "NONE");
-      getParamValue(plist, "planetrisk_point_output_type", prPointOutType, "NONE");
-      getParamValue(plist, "neighbor_output_type", prNeighborsOutType, "NONE");
-      getParamValue(plist, "children_output_type", prChildrenOutType, "NONE");
+      getParamValue(plist, "neighbor_output_type", neighborsOutType, "NONE");
+      getParamValue(plist, "children_output_type", childrenOutType, "NONE");
 
-      getParamValue(plist, "planetrisk_cell_output_file_name", prCellOutFileNameBase, false);
-      getParamValue(plist, "planetrisk_point_output_file_name", prPointOutFileNameBase, false);
-      getParamValue(plist, "neighbor_output_file_name", prNeighborsOutFileNameBase,
+      getParamValue(plist, "neighbor_output_file_name", neighborsOutFileNameBase,
                       false);
-      getParamValue(plist, "children_output_file_name", prChildrenOutFileNameBase,
+      getParamValue(plist, "children_output_file_name", childrenOutFileNameBase,
                       false);
 
       getParamValue(plist, "cell_output_file_name", cellOutFileNameBase, 
@@ -267,8 +263,8 @@ GridGenParam::~GridGenParam ()
  delete randPtsOut;
  delete prCellOut;
  delete prPtOut;
- delete prNbrOut;
- delete prChdOut;
+ delete nbrOut;
+ delete chdOut;
 
 }
 
@@ -708,15 +704,13 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
 {
    dp.nCellsOutputToFile++;
 
-   if (dp.maxCellsPerFile && dp.nCellsOutputToFile > dp.maxCellsPerFile)
-   {
+   if (dp.maxCellsPerFile && dp.nCellsOutputToFile > dp.maxCellsPerFile) {
       dp.nCellsOutputToFile = 1;
       dp.nOutputFile++;
       if (dp.nOutputFile > dp.outFileLastNum)
          return;
 
-      if (dp.cellOut)
-      {
+      if (dp.cellOut) {
          delete dp.cellOut;
          dp.cellOut = NULL;
          dp.cellOutShp = NULL;
@@ -727,9 +721,8 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
                          deg, false, dp.precision, dp.shapefileIdLen,
                          dp.kmlColor, dp.kmlWidth, dp.kmlName, 
                          dp.kmlDescription);
-
-         if (dp.outCellAttributes)
-         {
+   
+         if (dp.outCellAttributes) {
             dp.cellOutShp = static_cast<DgOutShapefile*>(dp.cellOut);
             dp.cellOutShp->setDefIntAttribute(dp.shapefileDefaultInt);
             dp.cellOutShp->setDefDblAttribute(dp.shapefileDefaultDouble);
@@ -737,10 +730,16 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
 
             dp.cellOutShp->addFields(dp.allFields);
          }
-      }
+      } else if (dp.prCellOut) {
+         delete dp.prCellOut;
+         dp.prCellOut = NULL;
 
-      if (dp.ptOut)
-      {
+         string fileName = dp.cellOutFileName + string("_") + 
+                                       dgg::util::to_string(dp.nOutputFile);
+         dp.prCellOut = new DgOutPRCellsFile(deg, fileName, dp.precision);
+      } 
+
+      if (dp.ptOut) {
          delete dp.ptOut;
          dp.ptOut = NULL;
          dp.ptOutShp = NULL;
@@ -760,6 +759,13 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
 
             dp.ptOutShp->addFields(dp.allFields);
          }
+      } else if (dp.prPtOut) {  
+         delete dp.prPtOut;
+         dp.prPtOut = NULL;
+      
+         string fileName = dp.ptOutFileName + string("_") + 
+                                       dgg::util::to_string(dp.nOutputFile);
+         dp.prPtOut = new DgOutPRPtsFile(deg, fileName, dp.precision);
       }
 
       if (dp.doRandPts && dp.randPtsOut)
@@ -781,44 +787,24 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
       }
 
       ///// PlanetRisk output files /////
-      if (dp.prPtOut)
-      {  
-         delete dp.prPtOut;
-         dp.prPtOut = NULL;
-         
-         string fileName = dp.prPointOutFileName + string("_") + 
+      if (dp.nbrOut)
+      {
+         delete dp.nbrOut;
+         dp.nbrOut = NULL;
+
+         string fileName = dp.neighborsOutFileName + string("_") +
                                        dgg::util::to_string(dp.nOutputFile);
-         dp.prPtOut = new DgOutPRPtsFile(deg, fileName, dp.precision);
+         dp.nbrOut = new DgOutPRNeighborsFile(fileName);
       }
 
-      if (dp.prCellOut)
+      if (dp.chdOut)
       {
-         delete dp.prCellOut;
-         dp.prCellOut = NULL;
+         delete dp.chdOut;
+         dp.chdOut = NULL;
 
-         string fileName = dp.prCellOutFileName + string("_") +
+         string fileName = dp.childrenOutFileName + string("_") +
                                        dgg::util::to_string(dp.nOutputFile);
-         dp.prCellOut = new DgOutPRCellsFile(deg, fileName, dp.precision);
-      }
-
-      if (dp.prNbrOut)
-      {
-         delete dp.prNbrOut;
-         dp.prNbrOut = NULL;
-
-         string fileName = dp.prNeighborsOutFileName + string("_") +
-                                       dgg::util::to_string(dp.nOutputFile);
-         dp.prNbrOut = new DgOutPRNeighborsFile(fileName);
-      }
-
-      if (dp.prChdOut)
-      {
-         delete dp.prChdOut;
-         dp.prChdOut = NULL;
-
-         string fileName = dp.prChildrenOutFileName + string("_") +
-                                       dgg::util::to_string(dp.nOutputFile);
-         dp.prChdOut = new DgOutPRChildrenFile(fileName, "chd");
+         dp.chdOut = new DgOutPRChildrenFile(fileName, "chd");
       }
    }
 
@@ -848,45 +834,44 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
    if (dp.megaVerbose) 
       cout << "accepted " << label << " " << add2D << endl;
 
+   const DgQ2DICoord& q2di = *dgg.getAddress(add2D);
    if (dp.cellOut)
    {
-      if (dp.outCellAttributes)
-         dp.cellOutShp->setCurFields(dp.curFields);
+      if (dp.prCellOut) {
+         dp.prCellOut->insert(cell.region(), &(cell.label()));
+      } else {
+         if (dp.outCellAttributes)
+            dp.cellOutShp->setCurFields(dp.curFields);
 
-      *dp.cellOut << cell;
+         *dp.cellOut << cell;
+      }
    }
 	
    if (dp.ptOut)
    {
-      if (dp.outPointAttributes)
-         dp.ptOutShp->setCurFields(dp.curFields);
+      if (dp.prPtOut)
+      {
+         string type = (q2di.coord() == DgIVec2D(0, 0)) ? "P" : "H";
+         dp.prPtOut->insert(cell.node(), type, &(cell.label()));
+      } else {
+         if (dp.outPointAttributes)
+            dp.ptOutShp->setCurFields(dp.curFields);
 
-      *dp.ptOut << cell;
+         *dp.ptOut << cell;
+      }
    }
 	
    ///// generate random points if applicable ///
    if (dp.doRandPts) 
       genPoints(dp, dgg, *dgg.getAddress(add2D), deg, cell.label());
 
-   ///// PlanetRisk output files /////
-   const DgQ2DICoord& q2di = *dgg.getAddress(add2D);
-   if (dp.prPtOut)
-   {
-      string type = (q2di.coord() == DgIVec2D(0, 0)) ? "P" : "H";
-      dp.prPtOut->insert(cell.node(), type, &(cell.label()));
-   }
-
-   if (dp.prCellOut)
-   {
-      dp.prCellOut->insert(cell.region(), &(cell.label()));
-   }
-
+   ///// neighbor/children output files /////
    DgLocVector neighbors;
    DgLocation ctrGeo = cell.node();
-   if (dp.prNbrOut)
+   if (dp.nbrOut)
    {
       dgg.setNeighbors(add2D, neighbors);
-      dp.prNbrOut->insert(dgg, add2D, neighbors);
+      dp.nbrOut->insert(dgg, add2D, neighbors);
 
       for (int i = 0; i < neighbors.size(); i++)
          dp.runStats.push(dgg.geoRF().dist(ctrGeo, neighbors[i]));
@@ -896,10 +881,11 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
    const DgHexIDGGS& dggs = hexdgg.dggs();
    DgResAdd<DgQ2DICoord> q2diR(q2di, dgg.res());
    DgLocVector children;
-   if (dp.prChdOut)
+   if (dp.chdOut)
    {
       dggs.setAllChildren(q2diR, children);
-      dp.prChdOut->insert(dgg, add2D, children);
+cout << children << endl;
+      dp.chdOut->insert(dgg, add2D, children);
    }
 
 } // void outputCell
@@ -947,23 +933,24 @@ void genGrid (GridGenParam& dp)
    string cellOutFileName = dp.cellOutFileName;
    string ptOutFileName = dp.ptOutFileName;
    string randPtsOutFileName = dp.randPtsOutFileName;
-   string prCellOutFileName = dp.prCellOutFileName;
-   string prPointOutFileName = dp.prPointOutFileName;
-   string prNeighborsOutFileName = dp.prNeighborsOutFileName;
-   string prChildrenOutFileName = dp.prChildrenOutFileName;
+   string neighborsOutFileName = dp.neighborsOutFileName;
+   string childrenOutFileName = dp.childrenOutFileName;
    if (dp.maxCellsPerFile)
    {
       string numStr = string("_") + dgg::util::to_string(dp.nOutputFile);
       cellOutFileName += numStr;
       ptOutFileName += numStr;
       randPtsOutFileName += numStr;
-      prCellOutFileName += numStr;
-      prPointOutFileName += numStr;
-      prNeighborsOutFileName += numStr;
-      prChildrenOutFileName += numStr;
+      neighborsOutFileName += numStr;
+      childrenOutFileName += numStr;
    }
    
-   dp.cellOut = DgOutLocFile::makeOutLocFile(dp.cellOutType, cellOutFileName,
+   dp.prCellOut = NULL;
+   dp.cellOut = NULL;
+   if (!dp.cellOutType.compare("CULMEN"))
+      dp.prCellOut = new DgOutPRCellsFile(deg, cellOutFileName, dp.precision);
+   else
+      dp.cellOut = DgOutLocFile::makeOutLocFile(dp.cellOutType, cellOutFileName,
                    deg, false, dp.precision, dp.shapefileIdLen,
                    dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
 
@@ -976,7 +963,12 @@ void genGrid (GridGenParam& dp)
       dp.cellOutShp->setDefStrAttribute(dp.shapefileDefaultString);
    }
 
-   dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, ptOutFileName,
+   dp.prPtOut = NULL;
+   dp.ptOut = NULL;
+   if (!dp.pointOutType.compare("CULMEN"))
+      dp.prPtOut = new DgOutPRPtsFile(deg, ptOutFileName, dp.precision);
+   else
+      dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, ptOutFileName,
                    deg, true, dp.precision, dp.shapefileIdLen,
                    dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
 
@@ -1005,21 +997,13 @@ void genGrid (GridGenParam& dp)
    }
 
    ///// PlanetRisk /////
-   dp.prPtOut = NULL;
-   if (!dp.prPointOutType.compare("PRTEXT"))
-      dp.prPtOut = new DgOutPRPtsFile(deg, prPointOutFileName, dp.precision);
+   dp.nbrOut = NULL;
+   if (!dp.neighborsOutType.compare("TEXT"))
+      dp.nbrOut = new DgOutPRNeighborsFile(neighborsOutFileName, "nbr");
 
-   dp.prCellOut = NULL;
-   if (!dp.prCellOutType.compare("PRTEXT"))
-      dp.prCellOut = new DgOutPRCellsFile(deg, prCellOutFileName, dp.precision);
-
-   dp.prNbrOut = NULL;
-   if (!dp.prNeighborsOutType.compare("PRTEXT"))
-      dp.prNbrOut = new DgOutPRNeighborsFile(prNeighborsOutFileName, "nbr");
-
-   dp.prChdOut = NULL;
-   if (!dp.prChildrenOutType.compare("PRTEXT"))
-      dp.prChdOut = new DgOutPRChildrenFile(prChildrenOutFileName, "chd");
+   dp.chdOut = NULL;
+   if (!dp.childrenOutType.compare("TEXT"))
+      dp.chdOut = new DgOutPRChildrenFile(childrenOutFileName, "chd");
 
    ////// do whole earth grid if applicable /////
 
@@ -1332,10 +1316,8 @@ void doGridGen (GridGenParam& dp, DgGridPList& plist)
       dp.ptOutFileName = dp.ptOutFileNameBase;
       dp.randPtsOutFileName = dp.randPtsOutFileNameBase;
       dp.metaOutFileName = dp.metaOutFileNameBase; 
-      dp.prCellOutFileName = dp.prCellOutFileNameBase;
-      dp.prPointOutFileName = dp.prPointOutFileNameBase;
-      dp.prNeighborsOutFileName = dp.prNeighborsOutFileNameBase;
-      dp.prChildrenOutFileName = dp.prChildrenOutFileNameBase;
+      dp.neighborsOutFileName = dp.neighborsOutFileNameBase;
+      dp.childrenOutFileName = dp.childrenOutFileNameBase;
 
       if (dp.placeRandom && dp.ptsRand != 0) 
          plist.setParam("randpts_seed", 

@@ -35,6 +35,8 @@
 #include "DgOutGeoJSONFile.h"
 #include "DgOutShapefile.h"
 #include "DgOutPtsText.h"
+#include "DgOutPRCellsFile.h"
+#include "DgOutPRPtsFile.h"
 #include "DgGeoSphRF.h"
 
 const string DgOutLocFile::defaultKMLColor = "ffffffff";
@@ -62,7 +64,7 @@ DgOutLocFile::makeOutLocFile (const string& type, const string& fileName,
                                  failLevelIn);
    else if (!type.compare("TEXT"))
       file = new DgOutPtsText(rf, fileName, precision, failLevelIn);
-   else // must be KML, GEOJSON or SHAPEFILE
+   else // must be KML, GEOJSON, SHAPEFILE, or CULMEN
    {
       const DgGeoSphDegRF* geoRF = dynamic_cast<const DgGeoSphDegRF*>(&rf);
       if (geoRF == NULL)
@@ -77,7 +79,12 @@ DgOutLocFile::makeOutLocFile (const string& type, const string& fileName,
       else if (!type.compare("SHAPEFILE"))
          file = new DgOutShapefile(*geoRF, fileName, precision, isPointFile, 
                                     shapefileIdLen, failLevelIn);
-      else if (type.compare("NONE"))
+      else if (!type.compare("CULMEN")) {
+         if (isPointFile)
+            file =  new DgOutPRPtsFile(*geoRF, fileName, precision);
+         else
+            file =  new DgOutPRCellsFile(*geoRF, fileName, precision);
+      } else if (type.compare("NONE"))
          ::report("DgOutLocFile::makeOutLoc(): invalid file type " + type, 
                                  failLevelIn);
    }

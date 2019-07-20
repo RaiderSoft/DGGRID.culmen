@@ -177,18 +177,12 @@ class GridGenParam : public MainParam {
       string randPtsOutType;
 
       // PlanetRisk
-      string prCellOutType;
-      string prPointOutType;
-      string prNeighborsOutType;
-      string prChildrenOutType;
-      string prCellOutFileNameBase;
-      string prCellOutFileName;
-      string prPointOutFileNameBase;
-      string prPointOutFileName;
-      string prNeighborsOutFileNameBase;
-      string prNeighborsOutFileName;
-      string prChildrenOutFileNameBase;
-      string prChildrenOutFileName;
+      string neighborsOutType;
+      string childrenOutType;
+      string neighborsOutFileNameBase;
+      string neighborsOutFileName;
+      string childrenOutFileNameBase;
+      string childrenOutFileName;
       // end PlanetRisk
 
       string cellOutFileNameBase;
@@ -216,7 +210,7 @@ class GridGenParam : public MainParam {
       DgOutShapefile *cellOutShp, *ptOutShp;
       DgOutPRCellsFile *prCellOut;
       DgOutPRPtsFile *prPtOut;
-      DgOutPRNeighborsFile *prNbrOut, *prChdOut;
+      DgOutPRNeighborsFile *nbrOut, *chdOut;
 
       DgRunningStats runStats;
 

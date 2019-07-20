@@ -1,0 +1,32 @@
+################################################################################
+#
+# mixedAperture.meta - example of generating a Culmen/PlanetRisk grid with
+#      neighbors and children.
+#
+# Kevin Sahr, 7/14/19
+#
+################################################################################
+
+# specify the operation
+dggrid_operation GENERATE_GRID
+
+# specify the DGG
+dggs_type CULMEN
+dggs_res_spec 5
+
+# control the generation
+clip_subset_type WHOLE_EARTH
+geodetic_densify 0.0
+
+# specify the output
+cell_output_type CULMEN
+cell_output_file_name outputfiles/culmenCells
+point_output_type CULMEN
+point_output_file_name outputfiles/culmenPts
+neighbor_output_type TEXT
+neighbor_output_file_name outputfiles/culmen
+children_output_type TEXT
+children_output_file_name outputfiles/culmen
+densification 0
+precision 6
+verbosity 0

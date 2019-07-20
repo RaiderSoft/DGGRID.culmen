@@ -569,23 +569,25 @@ DgGridPList::init2 (void)
 
    ////// output parameters //////
 
-   // cell_output_type <NONE | AIGEN | KML | GEOJSON | SHAPEFILE>
+   // cell_output_type <NONE | AIGEN | KML | GEOJSON | SHAPEFILE | CULMEN>
    choices.push_back(new string("NONE"));
    choices.push_back(new string("AIGEN"));
    choices.push_back(new string("KML"));
    choices.push_back(new string("GEOJSON"));
    choices.push_back(new string("SHAPEFILE"));
+   choices.push_back(new string("CULMEN"));
    insertParam(new DgStringChoiceParam("cell_output_type", "AIGEN", 
                &choices));
    dgg::util::release(choices);
 
-   // point_output_type <NONE | AIGEN | KML | GEOJSON | SHAPEFILE | TEXT>
+   // point_output_type <NONE | AIGEN | KML | GEOJSON | SHAPEFILE | TEXT | CULMEN>
    choices.push_back(new string("NONE"));
    choices.push_back(new string("AIGEN"));
    choices.push_back(new string("KML"));
    choices.push_back(new string("GEOJSON"));
    choices.push_back(new string("SHAPEFILE"));
    choices.push_back(new string("TEXT"));
+   choices.push_back(new string("CULMEN"));
    insertParam(new DgStringChoiceParam("point_output_type", "NONE", 
                &choices));
    dgg::util::release(choices);
@@ -631,29 +633,9 @@ DgGridPList::init2 (void)
 
    ///// PlanetRisk output formats /////
 
-   // planetrisk_cell_output_type <NONE | PRTEXT>
+   // neighbor_output_type <NONE | TEXT>
    choices.push_back(new string("NONE"));
-   choices.push_back(new string("PRTEXT"));
-   insertParam(new DgStringChoiceParam("planetrisk_cell_output_type", "NONE",
-               &choices));
-   dgg::util::release(choices);
-
-   // planetrisk_cell_output_file_name <outputFileName>
-   insertParam(new DgStringParam("planetrisk_cell_output_file_name", "geom"));
-
-   // planetrisk_point_output_type <NONE | PRTEXT>
-   choices.push_back(new string("NONE"));
-   choices.push_back(new string("PRTEXT"));
-   insertParam(new DgStringChoiceParam("planetrisk_point_output_type", "NONE",
-               &choices));
-   dgg::util::release(choices);
-
-   // planetrisk_point_output_file_name <outputFileName>
-   insertParam(new DgStringParam("planetrisk_point_output_file_name", "geom"));
-
-   // neighbor_output_type <NONE | PRTEXT>
-   choices.push_back(new string("NONE"));
-   choices.push_back(new string("PRTEXT"));
+   choices.push_back(new string("TEXT"));
    insertParam(new DgStringChoiceParam("neighbor_output_type", "NONE",
                &choices));
    dgg::util::release(choices);
@@ -661,9 +643,9 @@ DgGridPList::init2 (void)
    // neighbor_output_file_name <outputFileName>
    insertParam(new DgStringParam("neighbor_output_file_name", "nbr"));
 
-   // children_output_type <NONE | PRTEXT>
+   // children_output_type <NONE | TEXT>
    choices.push_back(new string("NONE"));
-   choices.push_back(new string("PRTEXT"));
+   choices.push_back(new string("TEXT"));
    insertParam(new DgStringChoiceParam("children_output_type", "NONE",
                &choices));
    dgg::util::release(choices);
