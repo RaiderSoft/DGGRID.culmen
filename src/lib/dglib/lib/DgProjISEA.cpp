@@ -89,7 +89,7 @@ DgProjISEAFwd::convertTypedAddress (const DgGeoCoord& addIn) const
 {
          
 //cout << "***DgProjISEAFwd: geoPt: " << addIn << endl;
-         GeoCoord ll;
+   GeoCoord ll;
 
    ll.lon = addIn.lon();
    ll.lat = addIn.lat();
@@ -98,7 +98,7 @@ DgProjISEAFwd::convertTypedAddress (const DgGeoCoord& addIn) const
 
    IcosaGridPt gridpt = snyderFwd(ll, projTriRF().sphIcosa());
 //cout << "    gridpt.triangle .x .y: " << gridpt.triangle << ", " <<
-//      gridpt.pt.x << ", " << gridpt.pt.y << endl;
+//gridpt.pt.x << ", " << gridpt.pt.y << endl;
 
 //cout << "DgProjTriCoord: " << DgProjTriCoord(gridpt.triangle, 
 //                               DgDVec2D(gridpt.pt.x, gridpt.pt.y)) << endl;
@@ -136,6 +136,8 @@ Vec2D sllxy (const GeoCoord& geoVect, SphIcosa& sphico, int nTri)
    ISEA projection: from sphere to plane
 */
 {
+cout << "XXX sllxy: " << std::fixed << setprecision(15) << geoVect.lat << ", " << geoVect.lon << " " << nTri << " " << endl;
+
    long double ph, fh, azh, azh1, dazh, h, dz, z, azh0, ag, cosAzh, sinAzh;
    Vec2D  Planevect;
    const PreCompGeo& cent = sphico.triCen[nTri];

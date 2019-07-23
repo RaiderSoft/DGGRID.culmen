@@ -26,7 +26,7 @@
 #include "DgString.h"
 #include "DgConverterBase.h"
 
-bool DgConverterBase::isTraceOn_ = false;
+bool DgConverterBase::isTraceOn_ = true;
 ostream* DgConverterBase::traceStream_ = &cout;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,8 +26,8 @@ cell_output_file_name ./outputfiles/culmenCells
 densification 0
 
 # output neighbors and children
-neighbor_output_type PRTEXT
+neighbor_output_type TEXT
 neighbor_output_file_name outputfiles/neighbors
-children_output_type PRTEXT
+children_output_type TEXT
 children_output_file_name outputfiles/children
 

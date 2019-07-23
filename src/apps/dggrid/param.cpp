@@ -210,6 +210,7 @@ MainParam::MainParam (DgParamList& plist)
    else if (apertureType == "SEQUENCE") 
       isApSeq = true;
 
+   numAp4 = 0;
    if (isMixed43)
       getParamValue(plist, "dggs_num_aperture_4_res", numAp4, false);
    else if (isApSeq)

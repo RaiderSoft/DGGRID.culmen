@@ -218,9 +218,18 @@ DgSeriesConverter::~DgSeriesConverter (void)
 DgAddressBase* 
 DgSeriesConverter::createConvertedAddress (const DgAddressBase& addIn) const
 {
-   if (isTraceOn()) traceStream() << "->series";
+   // keep track of nested series depth for formatting output
+   static int seriesDepth = 0;
+   seriesDepth++;
+
+   if (isTraceOn())
+      traceStream() << " -> " << std::string(seriesDepth, '*') << " <SERIES> " 
+                    << fromFrame().name() << ": " << addIn << endl;
 
    DgAddressBase* pAdd0 = series_[0]->createConvertedAddress(addIn);
+   if (isTraceOn()) 
+      traceStream() << std::string(seriesDepth, '*') << "  --> " 
+                    << fromFrame().name() << ": " << *pAdd0 << endl;
 
 #if DGDEBUG
 cout << "BEGIN series conversion" << endl;
@@ -231,10 +240,15 @@ cout << "BEGIN series conversion" << endl;
 
       delete pAdd0;
       pAdd0 = pAdd1;
+      if (isTraceOn()) 
+         traceStream() << std::string(seriesDepth, '*') << "  --> " 
+                       << fromFrame().name() << ": " << *pAdd0 << endl;
    }
 #if DGDEBUG
 cout << "END series conversion" << endl;
 #endif
+
+   seriesDepth--;
 
    return pAdd0;
 

@@ -883,8 +883,8 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
    DgLocVector children;
    if (dp.chdOut)
    {
+cout << add2D << " " << q2diR << endl;
       dggs.setAllChildren(q2diR, children);
-cout << children << endl;
       dp.chdOut->insert(dgg, add2D, children);
    }
 
@@ -917,7 +917,7 @@ void genGrid (GridGenParam& dp)
    DgRFNetwork net0;
    DgGeoSphRF geoRF(net0, dp.datum, dp.earthRadius);
    const DgIDGGSBase *idggs = DgIDGGSBase::makeRF(net0, geoRF, dp.vert0,
-             dp.azimuthDegs, dp.aperture, dp.actualRes+1, dp.gridTopo, "IDGGS",
+             dp.azimuthDegs, dp.aperture, dp.actualRes+2, dp.gridTopo, "IDGGS",
              dp.projType, dp.isMixed43, dp.numAp4, dp.isSuperfund, dp.isApSeq, dp.apSeq);
 
    const DgIDGGBase& dgg = idggs->idggBase(dp.actualRes);
