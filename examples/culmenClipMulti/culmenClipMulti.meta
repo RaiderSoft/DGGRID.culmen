@@ -1,7 +1,7 @@
 ################################################################################
 #
-# culmenGeoJSON2.meta - example of a DGGRID metafile that generates a resolution 
-#     13 Culmen/PlanetRisk grid for a polygons over the Alexandria and Tysons
+# culmenClipMulti.meta - example of a DGGRID metafile that generates a resolution 
+#     14 Culmen/PlanetRisk grid for a polygons over the Alexandria and Tysons
 #     Corner offices of Culmen International, the White House, the Reflecting
 #     Pool, and the Pentagon.
 #

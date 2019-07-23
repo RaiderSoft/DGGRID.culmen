@@ -2,8 +2,9 @@ aigenerate
 binpres
 binvals
 culmenGridGen
-culmenGeoJSON
-culmenGeoJSON2
+culmenClipHiRes
+culmenClipMulti
+culmenTable
 determineRes
 gdalTest
 gdalTest2

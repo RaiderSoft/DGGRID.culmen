@@ -1,7 +1,7 @@
 ** executing DGGRID version 7.0b0 **
 type sizes: big int: 64 bits / big double: 128 bits
 
-** loading meta file culmenGeoJSON.meta...
+** loading meta file culmenClipHiRes.meta...
 * using parameter values:
 dggrid_operation GENERATE_GRID (user set)
 dggs_type CULMEN (user set)
