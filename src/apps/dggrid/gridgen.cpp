@@ -881,9 +881,7 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
    const DgHexIDGGS& dggs = hexdgg.dggs();
    DgResAdd<DgQ2DICoord> q2diR(q2di, dgg.res());
    DgLocVector children;
-   if (dp.chdOut)
-   {
-cout << add2D << " " << q2diR << endl;
+   if (dp.chdOut) {
       dggs.setAllChildren(q2diR, children);
       dp.chdOut->insert(dgg, add2D, children);
    }

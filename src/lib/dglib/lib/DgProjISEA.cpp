@@ -136,8 +136,6 @@ Vec2D sllxy (const GeoCoord& geoVect, SphIcosa& sphico, int nTri)
    ISEA projection: from sphere to plane
 */
 {
-cout << "XXX sllxy: " << std::fixed << setprecision(15) << geoVect.lat << ", " << geoVect.lon << " " << nTri << " " << endl;
-
    long double ph, fh, azh, azh1, dazh, h, dz, z, azh0, ag, cosAzh, sinAzh;
    Vec2D  Planevect;
    const PreCompGeo& cent = sphico.triCen[nTri];
@@ -147,8 +145,11 @@ cout << "XXX sllxy: " << std::fixed << setprecision(15) << geoVect.lat << ", " <
 
    dazh = sphico.dazh[nTri];
 
-   z = acosl(cent.sinLat * sinLat + cent.cosLat * cosLat * 
-       cosl(geoVect.lon - cent.pt.lon));
+   long double tmp = cent.sinLat * sinLat + cent.cosLat * cosLat * 
+       cosl(geoVect.lon - cent.pt.lon);
+   if (tmp > M_ONE) tmp = M_ONE;
+   if (tmp < -M_ONE) tmp = -M_ONE;
+   z = acosl(tmp);
 
    if (z > DH + 0.00000005L)
    {
