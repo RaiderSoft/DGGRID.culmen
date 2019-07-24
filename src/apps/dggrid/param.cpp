@@ -608,10 +608,10 @@ DgGridPList::init2 (void)
    dgg::util::release(choices);
 
    // cell_output_gdal_driver <gdal driver type>
-   insertParam(new DgStringParam("cell_output_gdal_driver", "ESRI Shapefile"));
+   insertParam(new DgStringParam("cell_output_gdal_driver", "GeoJSON"));
 
    // point_output_gdal_driver <gdal driver type>
-   insertParam(new DgStringParam("point_output_gdal_driver", "ESRI Shapefile"));
+   insertParam(new DgStringParam("point_output_gdal_driver", "GeoJSON"));
 
    // cell_output_file_name <outputFileName>
    insertParam(new DgStringParam("cell_output_file_name", "cells"));

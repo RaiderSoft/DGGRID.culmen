@@ -133,7 +133,9 @@ GridGenParam::GridGenParam (DgParamList& plist)
       ///// output files
 
       getParamValue(plist, "cell_output_type", cellOutType, "NONE");
+      getParamValue(plist, "cell_output_gdal_driver", gdalCellDriver, "NONE");
       getParamValue(plist, "point_output_type", pointOutType, "NONE");
+      getParamValue(plist, "point_output_gdal_driver", gdalPointDriver, "NONE");
       getParamValue(plist, "randpts_output_type", randPtsOutType, "NONE");
       getParamValue(plist, "neighbor_output_type", neighborsOutType, "NONE");
       getParamValue(plist, "children_output_type", childrenOutType, "NONE");
@@ -718,6 +720,7 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
          string fileName = dp.cellOutFileName + string("_") + 
                                        dgg::util::to_string(dp.nOutputFile);
          dp.cellOut = DgOutLocFile::makeOutLocFile(dp.cellOutType, fileName,
+                         dp.gdalCellDriver,
                          deg, false, dp.precision, dp.shapefileIdLen,
                          dp.kmlColor, dp.kmlWidth, dp.kmlName, 
                          dp.kmlDescription);
@@ -747,6 +750,7 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
          string fileName = dp.ptOutFileName + string("_") + 
                                        dgg::util::to_string(dp.nOutputFile);
          dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, fileName,
+                      dp.gdalPointDriver,
                       deg, true, dp.precision, dp.shapefileIdLen,
                       dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
 
@@ -781,7 +785,8 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
                dp.randPtsOut = new DgOutRandPtsText(deg, fileName, dp.precision);
             else
                dp.randPtsOut = DgOutLocFile::makeOutLocFile(dp.randPtsOutType,
-                    fileName, deg, true, dp.precision, dp.shapefileIdLen,
+                    fileName, dp.gdalPointDriver, deg, true, dp.precision, 
+                    dp.shapefileIdLen,
                     dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
          }
       }
@@ -948,7 +953,7 @@ void genGrid (GridGenParam& dp)
    if (!dp.cellOutType.compare("CULMEN"))
       dp.prCellOut = new DgOutPRCellsFile(deg, cellOutFileName, dp.precision);
    else
-      dp.cellOut = DgOutLocFile::makeOutLocFile(dp.cellOutType, cellOutFileName,
+      dp.cellOut = DgOutLocFile::makeOutLocFile(dp.cellOutType, cellOutFileName, dp.gdalCellDriver,
                    deg, false, dp.precision, dp.shapefileIdLen,
                    dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
 
@@ -966,7 +971,7 @@ void genGrid (GridGenParam& dp)
    if (!dp.pointOutType.compare("CULMEN"))
       dp.prPtOut = new DgOutPRPtsFile(deg, ptOutFileName, dp.precision);
    else
-      dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, ptOutFileName,
+      dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, ptOutFileName, dp.gdalPointDriver,
                    deg, true, dp.precision, dp.shapefileIdLen,
                    dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
 
@@ -989,7 +994,7 @@ void genGrid (GridGenParam& dp)
                       dp.precision);
          else
             dp.randPtsOut = DgOutLocFile::makeOutLocFile(dp.randPtsOutType, 
-                      randPtsOutFileName, deg, true, dp.precision, dp.shapefileIdLen,
+                      randPtsOutFileName, dp.gdalPointDriver, deg, true, dp.precision, dp.shapefileIdLen,
                       dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
       }
    }
@@ -1112,10 +1117,6 @@ void genGrid (GridGenParam& dp)
       if (dp.clipGDAL) {
         report("Registering GDAL drivers...", DgBase::Info);
         GDALAllRegister();
-        report("Done.", DgBase::Info);
-        DgQuadClipRegion clipRegions[12]; // clip regions for each quad
-        set<DgIVec2D> overageSet[12];     // overage sets
-        map<DgIVec2D, set<DgDBFfield> > overageFields[12]; // associated fields
       }
 
       DgQuadClipRegion clipRegions[12]; // clip regions for each quad

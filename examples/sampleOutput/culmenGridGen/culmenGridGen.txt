@@ -27,11 +27,13 @@ clipper_scale_factor 1000000 (default)
 densification 0 (user set)
 precision 6 (user set)
 output_cell_label_type GLOBAL_SEQUENCE (default)
-cell_output_type NONE (user set)
-point_output_type KML (user set)
+cell_output_type GDAL (user set)
+point_output_type GDAL (user set)
 randpts_output_type NONE (default)
-cell_output_file_name cells (default)
-point_output_file_name outputfiles/points (user set)
+cell_output_gdal_driver KML (user set)
+point_output_gdal_driver GeoJSON (user set)
+cell_output_file_name outputfiles/cells.kml (user set)
+point_output_file_name outputfiles/points.geojson (user set)
 randpts_output_file_name randPts (default)
 shapefile_id_field_length 11 (default)
 kml_default_width 4 (default)
@@ -48,6 +50,7 @@ output_file_start_num 1 (default)
 output_file_last_num 18446744073709551615 (default)
 verbosity 0 (default)
 
+Warning 1: Layer name 'outputfiles/cells.kml' adjusted to 'outputfiles_cells.kml' for XML validity.
 
 ** grid generation complete **
 * generated 4,322 cells

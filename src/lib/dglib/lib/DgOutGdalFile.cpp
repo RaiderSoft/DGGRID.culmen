@@ -34,14 +34,14 @@
 #include "DgCell.h"
 #include "DgGeoSphRF.h"
 
+////////////////////////////////////////////////////////////////////////////////
 DgOutGdalFile::DgOutGdalFile(const DgGeoSphDegRF& rf,
-                             const std::string& filename, const std::string& gdalDriver, int precision, bool isPointFile,
-                             DgReportLevel failLevel)
-    : DgOutputStream (filename, "log", failLevel),
-      DgOutLocFile (filename, rf, isPointFile, failLevel)
+                    const std::string& filename, const std::string& gdalDriver, 
+                    int precision, bool isPointFile, DgReportLevel failLevel)
+    : DgOutLocFile (filename, rf, isPointFile, failLevel)
 {
     if (0 == rf.vecAddress(DgDVec2D())) {
-        DgOutputStream::report("DgOutGdalFile::DgOutGdalFile(): RF " + rf.name() +
+        ::report("DgOutGdalFile::DgOutGdalFile(): RF " + rf.name() +
                                " must override the vecAddress() method", DgBase::Fatal);
     }
 
@@ -60,19 +60,38 @@ DgOutGdalFile::~DgOutGdalFile()
 void DgOutGdalFile::init(const std::string& filename)
 {
 
-	GDALAllRegister();
+/*
+   // get just the file name
+   string s = DgOutLocFile::fileName();
 
-	_driver = GetGDALDriverManager()->GetDriverByName(_gdalDriver.c_str());
+   char sep = '/';
+
+   #ifdef _WIN32
+      sep = '\\';
+   #endif
+
+   bool found = false;
+   size_t i = s.rfind(sep, s.length());
+   if (i != string::npos) 
+      s = s.substr(i+1, s.length() - i);
+
+   fileNameOnly_ = s;
+*/
+   fileNameOnly_ = DgOutLocFile::fileName();
+
+   GDALAllRegister();
+
+    _driver = GetGDALDriverManager()->GetDriverByName(_gdalDriver.c_str());
     if( _driver == NULL )
     {
-        DgOutputStream::report( _gdalDriver + " driver not available.",  DgBase::Fatal);
+        ::report( _gdalDriver + " driver not available.",  DgBase::Fatal);
         exit(1);
     }
 
-    _dataset = _driver->Create( filename.c_str(), 0, 0, 0, GDT_Unknown, NULL );
+    _dataset = _driver->Create( fileNameOnly_.c_str(), 0, 0, 0, GDT_Unknown, NULL );
     if( _dataset == NULL )
     {
-        DgOutputStream::report( "Creation of output file failed.", DgBase::Fatal );
+        ::report( "Creation of output file failed.", DgBase::Fatal );
         exit( 1 );
     }
 	
@@ -94,10 +113,9 @@ DgOutGdalFile::insert (DgLocation& loc, const string* label)
 	if( _oLayer == NULL ) {
 		
 		//Create the point layer that we will be using
-		_oLayer = _dataset->CreateLayer( "point_out", NULL, wkbPoint, NULL );
-		if( _oLayer == NULL )
-		{
-		    DgOutputStream::report( "Layer creation failed.", DgBase::Fatal );
+		_oLayer = _dataset->CreateLayer( fileNameOnly_.c_str(), NULL, wkbPoint, NULL );
+		if( _oLayer == NULL ) {
+		    ::report( "Layer creation failed.", DgBase::Fatal );
 		    exit( 1 );
 		}
 		
@@ -106,7 +124,7 @@ DgOutGdalFile::insert (DgLocation& loc, const string* label)
 		_oField->SetWidth(32);
 		if( _oLayer->CreateField( _oField ) != OGRERR_NONE )
 		{
-		    DgOutputStream::report( "Creating Name field failed.", DgBase::Fatal );
+		    ::report( "Creating Name field failed.", DgBase::Fatal );
 		    exit( 1 );
 		}
 	}
@@ -129,7 +147,7 @@ DgOutGdalFile::insert (DgLocation& loc, const string* label)
 	//Make sure no errors occur with binding the feature to the layer
 	if( _oLayer->CreateFeature( feature ) != OGRERR_NONE )
     {
-        DgOutputStream::report( "Failed to create feature in file", DgBase::Fatal );
+        ::report( "Failed to create feature in file", DgBase::Fatal );
         exit( 1 );
     }
 	
@@ -146,10 +164,10 @@ DgOutGdalFile::insert (DgLocVector& vec, const string* label,
 
 	if( _oLayer == NULL ) {
 		//Create the point layer that we will be using
-		_oLayer = _dataset->CreateLayer( "polygon_out", NULL, wkbPolygon, NULL );
+		_oLayer = _dataset->CreateLayer( fileNameOnly_.c_str(), NULL, wkbPolygon, NULL );
 		if( _oLayer == NULL )
 		{
-		    DgOutputStream::report( "Layer creation failed.", DgBase::Fatal );
+		    ::report( "Layer creation failed.", DgBase::Fatal );
 		    exit( 1 );
 		}
 
@@ -157,7 +175,7 @@ DgOutGdalFile::insert (DgLocVector& vec, const string* label,
 		_oField->SetWidth(32);
 		if( _oLayer->CreateField( _oField ) != OGRERR_NONE )
 		{
-		    DgOutputStream::report( "Creating Name field failed.", DgBase::Fatal );
+		    ::report( "Creating Name field failed.", DgBase::Fatal );
 		    exit( 1 );
 		}
 	}
@@ -188,7 +206,7 @@ DgOutGdalFile::insert (DgLocVector& vec, const string* label,
 	//Make sure no errors occure with binding the feature to the layer
 	if( _oLayer->CreateFeature( feature ) != OGRERR_NONE )
     {
-        DgOutputStream::report( "Failed to create feature in file", DgBase::Fatal );
+        ::report( "Failed to create feature in file", DgBase::Fatal );
         exit( 1 );
     }
 	
@@ -204,10 +222,10 @@ DgOutGdalFile::insert (DgPolygon& poly, const string* label,
 {
 	if( _oLayer == NULL ) {
 		//Create the point layer that we will be using
-		_oLayer = _dataset->CreateLayer( "polygon_out", NULL, wkbPolygon, NULL );
+		_oLayer = _dataset->CreateLayer( fileNameOnly_.c_str(), NULL, wkbPolygon, NULL );
 		if( _oLayer == NULL )
 		{
-		    DgOutputStream::report( "Layer creation failed.", DgBase::Fatal );
+		    ::report( "Layer creation failed.", DgBase::Fatal );
 		    exit( 1 );
 		}
 
@@ -215,7 +233,7 @@ DgOutGdalFile::insert (DgPolygon& poly, const string* label,
 		_oField->SetWidth(32);
 		if( _oLayer->CreateField( _oField ) != OGRERR_NONE )
 		{
-		    DgOutputStream::report( "Creating Name field failed.", DgBase::Fatal );
+		    ::report( "Creating Name field failed.", DgBase::Fatal );
 		    exit( 1 );
 		}
 	}
@@ -244,7 +262,7 @@ DgOutGdalFile::insert (DgPolygon& poly, const string* label,
 		feature->SetField("Name", label->c_str());
 	}
 	else {
-		DgOutputStream::report( "Could not get LayerDefn", DgBase::Fatal );
+		::report( "Could not get LayerDefn", DgBase::Fatal );
 		exit(1);
 	}
 
@@ -252,7 +270,7 @@ DgOutGdalFile::insert (DgPolygon& poly, const string* label,
 	//Make sure no errors occure with binding the feature to the layer
 	if( _oLayer->CreateFeature( feature ) != OGRERR_NONE )
     {
-        DgOutputStream::report( "Failed to create feature in file", DgBase::Fatal );
+        ::report( "Failed to create feature in file", DgBase::Fatal );
         exit( 1 );
     }
 	

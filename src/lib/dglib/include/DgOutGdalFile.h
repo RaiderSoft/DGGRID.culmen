@@ -30,7 +30,6 @@
 #include <string>
 #include <iostream>
 
-#include "DgOutputStream.h"
 #include "ogrsf_frmts.h"
 #include "DgUtil.h"
 #include "DgOutLocTextFile.h"
@@ -39,14 +38,14 @@ class DgDVec2D;
 class DgPolygon;
 class DgGeoSphDegRF;
 
-class DgOutGdalFile : public DgOutputStream, public DgOutLocFile//public DgOutLocTextFile
+class DgOutGdalFile : public DgOutLocFile
 {
     using DgOutLocFile::insert;
 
 public:
 
     DgOutGdalFile(const DgGeoSphDegRF& rf,
-                     const std::string& filename = "", const std::string& gdalDriver = "ESRI Shapefile", int precision = 7,
+                     const std::string& filename = "", const std::string& gdalDriver = "GeoJSON", int precision = 7,
                      bool isPointFile = false, DgReportLevel failLevel = DgBase::Fatal);
 
     ~DgOutGdalFile();
@@ -55,13 +54,12 @@ public:
     virtual bool open (const string& fileName,
                        DgReportLevel failLevel = DgBase::Fatal)
     {
-        return DgOutputStream::open(fileName, failLevel);
+        return true;
     }
 
     virtual void close (void)
     {
-		GDALClose( _dataset );
-        DgOutputStream::close();
+       GDALClose( _dataset );
     }
 
 
@@ -71,7 +69,7 @@ public:
     virtual DgOutLocFile& insert (DgPolygon& poly, const string* label = NULL,
                                   const DgLocation* cent = NULL);
 
-	virtual void setFormatStr(void)
+    virtual void setFormatStr(void)
     {
         
     }
@@ -88,6 +86,7 @@ private:
 	GDALDataset  *_dataset;
 	OGRLayer     *_oLayer;
 	OGRFieldDefn *_oField;
+        std::string fileNameOnly_;
 		
     void init(const std::string& filename);
 };

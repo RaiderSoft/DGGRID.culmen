@@ -174,7 +174,9 @@ class GridGenParam : public MainParam {
       DgRandom* ptsRand;     // RNG for generating random points
 
       string cellOutType;
+      string gdalCellDriver;
       string pointOutType;
+      string gdalPointDriver;
       string randPtsOutType;
 
       // PlanetRisk

@@ -53,7 +53,7 @@ class DgOutLocFile : public DgBase {
 
       // factory method
       static DgOutLocFile* makeOutLocFile (const string& type,
-               const string& fileName, const DgRFBase& rf, 
+               const string& fileName, const string& gdalDriver, const DgRFBase& rf, 
                bool isPointFile = false, int precision = 7,
                int shapefileIdLen = 11, const string& kmlColor = defaultKMLColor,
                int kmlWidth = defaultKMLWidth, 

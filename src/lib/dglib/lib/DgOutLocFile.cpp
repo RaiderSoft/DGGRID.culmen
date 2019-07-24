@@ -31,6 +31,7 @@
 #include "DgPolygon.h"
 #include "DgLocation.h"
 #include "DgOutAIGenFile.h"
+#include "DgOutGdalFile.h"
 #include "DgOutKMLfile.h"
 #include "DgOutGeoJSONFile.h"
 #include "DgOutShapefile.h"
@@ -53,6 +54,7 @@ DgOutLocFile::~DgOutLocFile (void)
 ////////////////////////////////////////////////////////////////////////////////
 DgOutLocFile* 
 DgOutLocFile::makeOutLocFile (const string& type, const string& fileName, 
+                    const string& gdalDriver,
                     const DgRFBase& rf, bool isPointFile, int precision,
                     int shapefileIdLen, const string& kmlColor, int kmlWidth,
                     const string& kmlName, const string& kmlDesc,
@@ -79,6 +81,8 @@ DgOutLocFile::makeOutLocFile (const string& type, const string& fileName,
       else if (!type.compare("SHAPEFILE"))
          file = new DgOutShapefile(*geoRF, fileName, precision, isPointFile, 
                                     shapefileIdLen, failLevelIn);
+      else if (!type.compare("GDAL"))
+         file = new DgOutGdalFile(*geoRF, fileName, gdalDriver, precision, isPointFile, failLevelIn);
       else if (!type.compare("CULMEN")) {
          if (isPointFile)
             file =  new DgOutPRPtsFile(*geoRF, fileName, precision);

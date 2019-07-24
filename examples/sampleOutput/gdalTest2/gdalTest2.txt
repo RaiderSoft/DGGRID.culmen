@@ -30,6 +30,8 @@ output_cell_label_type GLOBAL_SEQUENCE (default)
 cell_output_type GEOJSON (user set)
 point_output_type GEOJSON (user set)
 randpts_output_type NONE (default)
+cell_output_gdal_driver GeoJSON (default)
+point_output_gdal_driver GeoJSON (default)
 cell_output_file_name ./outputfiles/corvallisCells (user set)
 point_output_file_name ./outputfiles/corvallisPts (user set)
 randpts_output_file_name randPts (default)
@@ -49,7 +51,6 @@ output_file_last_num 18446744073709551615 (default)
 verbosity 0 (default)
 
 Registering GDAL drivers...
-Done.
 
 * building clipping regions...
 
