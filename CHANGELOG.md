@@ -5,6 +5,7 @@ All changes are by Kevin Sahr, unless otherwise noted.
 
 ## [7.0b] - 2019-07-15
 ### Changed
+- made DgSerialConverter conersion trace code more informative/legible
 - list to come
 
 ## [6.51] - 2019-07-01
