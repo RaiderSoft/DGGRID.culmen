@@ -3,10 +3,23 @@ All notable changes to this project will be documented in this file.
 
 All changes are by Kevin Sahr, unless otherwise noted.
 
-## [7.0b] - 2019-07-15
+## [7.0] - 2019-08-01
+### Added
+- added CULMEN/PLANETRISK choice to parameter dggs_type 
+- added aperture 7 choice to parameter dggs_aperture 
+- added SEQUENCE choice to parameter dggs_aperture_type
+- added GDAL choice to parameter clip_subset_type
+- added GDAL and CULMEN choices to parameters cell_output_type and point_output_type
+- added new parameter cell_output_gdal_driver
+- added new parameter point_output_gdal_driver
+- added cell neighbor output, including parameters neighbor_output_type and neighbor_output_file_name
+- added cell children output, including parameters children_output_type and children_output_file_name
+- added parameters output_file_start_num and output_file_last_num
+- restored INTERLEAVE choice to parameter output_address_type
 ### Changed
-- made DgSerialConverter conersion trace code more informative/legible
-- list to come
+- released DGGRID under the AGPL license
+- made DgSerialConverter conversion trace code more informative/legible
+- updated documentation to reflect all changes
 
 ## [6.51] - 2019-07-01
 ### Changed
@@ -18,7 +31,7 @@ All changes are by Kevin Sahr, unless otherwise noted.
 - changed examples/sampleOutput to reflect the rotation angle change
 - minor changes to examples output formatting
 
-## [6.42] - 2019-05-3
+## [6.42] - 2019-05-03
 ### Changed
 - using shortest distance to face center point to calculate the face a point is on
 - all trig functions and sqrt's now use long double versions
