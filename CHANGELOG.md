@@ -8,6 +8,7 @@ All changes are by Kevin Sahr, unless otherwise noted.
 - added CULMEN/PLANETRISK choice to parameter dggs_type 
 - added aperture 7 choice to parameter dggs_aperture 
 - added SEQUENCE choice to parameter dggs_aperture_type
+- added new parameter dggs_aperture_sequence
 - added GDAL choice to parameter clip_subset_type
 - added GDAL and CULMEN choices to parameters cell_output_type and point_output_type
 - added new parameter cell_output_gdal_driver
