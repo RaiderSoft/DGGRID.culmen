@@ -158,6 +158,10 @@ void doTransform (TransformParam& dp)
    else if (dp.inAddType == "Q2DI") pInRF = &dgg;
    else if (dp.inAddType == "SEQNUM") 
    {
+      if (dp.isApSeq)
+         ::report("input_address_type of SEQNUM not supported for dggs_aperture_type of SEQUENCE", 
+                  DgBase::Fatal);
+
       dp.inSeqNum = true;
       pInRF = &dgg;
    }

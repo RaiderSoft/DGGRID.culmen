@@ -33,7 +33,7 @@
 void 
 MainParam::determineRes (const DgParamList& plist)
 {
-   int maxRes = 35;
+   int maxRes = (apertureType != "SEQUENCE") ? MAX_DGG_RES : apSeq.lastRes();
 
    // get the parameters
 
@@ -67,8 +67,6 @@ MainParam::determineRes (const DgParamList& plist)
 
       DgRFNetwork net0;
       DgGeoSphRF geoRF(net0, "GS0", earthRadius);
-
-//const string& apSeqStr = "43334777777";
       const DgIDGGSBase *idggs = DgIDGGSBase::makeRF(net0, geoRF, vert0,
              azimuthDegs, aperture, maxRes, gridTopo, "IDGGS",
              projType, isMixed43, numAp4, isSuperfund, isApSeq, apSeq);
@@ -435,7 +433,7 @@ DgGridPList::DgGridPList (void)
 */
 
    // dggs_num_aperture_4_res
-   insertParam(new DgIntParam("dggs_num_aperture_4_res", 0, 0, 35));
+   insertParam(new DgIntParam("dggs_num_aperture_4_res", 0, 0, MAX_DGG_RES));
 
    // proj_datum <WGS84_AUTHALIC_SPHERE WGS84_MEAN_SPHERE CUSTOM_SPHERE>
    choices.push_back(new string("WGS84_AUTHALIC_SPHERE"));
@@ -504,8 +502,8 @@ DgGridPList::DgGridPList (void)
    // dggs_res_specify_rnd_down <TRUE ! FALSE> (true indicates round down, false up)
    insertParam(new DgBoolParam("dggs_res_specify_rnd_down", true));
  
-   // dggs_res_spec <int> (0 <= v <= 35)
-   insertParam(new DgIntParam("dggs_res_spec", 9, 0, 35));
+   // dggs_res_spec <int> (0 <= v <= MAX_DGG_RES)
+   insertParam(new DgIntParam("dggs_res_spec", 9, 0, MAX_DGG_RES));
 
    // rng_type <RAND | MOTHER>
    choices.push_back(new string("RAND"));

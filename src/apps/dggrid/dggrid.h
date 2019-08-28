@@ -23,6 +23,7 @@
 //
 // Version 6.1 - Kevin Sahr, 5/23/13
 // Version 6.2 - Kevin Sahr, 10/25/14
+// Version 7.0 - Kevin Sahr, 9/1/19
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -51,6 +52,9 @@ class DgOutPRPtsFile;
 class DgOutPRNeighborsFile;
 class DgOutPRChildrenFile;
 class DgOutputStream;
+
+// constants
+#define MAX_DGG_RES 35
 
 ////////////////////////////////////////////////////////////////////////////////
 //// function prototypes ////
@@ -179,14 +183,12 @@ class GridGenParam : public MainParam {
       string gdalPointDriver;
       string randPtsOutType;
 
-      // PlanetRisk
       string neighborsOutType;
       string childrenOutType;
       string neighborsOutFileNameBase;
       string neighborsOutFileName;
       string childrenOutFileNameBase;
       string childrenOutFileName;
-      // end PlanetRisk
 
       string cellOutFileNameBase;
       string cellOutFileName;

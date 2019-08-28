@@ -97,6 +97,9 @@ GridGenParam::GridGenParam (DgParamList& plist)
          clipGDAL  = true; 
       } else if (dummy == "SEQNUMS")
          seqToPoly = true;
+         if (isApSeq)
+            ::report("clip_subset_type of SEQNUMS not supported for dggs_aperture_type of SEQUENCE", 
+                     DgBase::Fatal);
       else
          ::report("Unrecognised value for 'clip_subset_type'", DgBase::Fatal);
 
