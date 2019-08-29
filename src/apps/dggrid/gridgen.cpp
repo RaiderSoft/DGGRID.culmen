@@ -137,9 +137,9 @@ GridGenParam::GridGenParam (DgParamList& plist)
       ///// output files
 
       getParamValue(plist, "cell_output_type", cellOutType, "NONE");
-      getParamValue(plist, "cell_output_gdal_driver", gdalCellDriver, "NONE");
+      getParamValue(plist, "cell_output_gdal_format", gdalCellDriver, "NONE");
       getParamValue(plist, "point_output_type", pointOutType, "NONE");
-      getParamValue(plist, "point_output_gdal_driver", gdalPointDriver, "NONE");
+      getParamValue(plist, "point_output_gdal_format", gdalPointDriver, "NONE");
       getParamValue(plist, "randpts_output_type", randPtsOutType, "NONE");
       getParamValue(plist, "neighbor_output_type", neighborsOutType, "NONE");
       getParamValue(plist, "children_output_type", childrenOutType, "NONE");
@@ -954,7 +954,7 @@ void genGrid (GridGenParam& dp)
    
    dp.prCellOut = NULL;
    dp.cellOut = NULL;
-   if (!dp.cellOutType.compare("CULMEN"))
+   if (!dp.cellOutType.compare("TEXT"))
       dp.prCellOut = new DgOutPRCellsFile(deg, cellOutFileName, dp.precision);
    else
       dp.cellOut = DgOutLocFile::makeOutLocFile(dp.cellOutType, cellOutFileName, dp.gdalCellDriver,
@@ -972,10 +972,12 @@ void genGrid (GridGenParam& dp)
 
    dp.prPtOut = NULL;
    dp.ptOut = NULL;
+/*
    if (!dp.pointOutType.compare("CULMEN"))
       dp.prPtOut = new DgOutPRPtsFile(deg, ptOutFileName, dp.precision);
    else
-      dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, ptOutFileName, dp.gdalPointDriver,
+*/
+   dp.ptOut = DgOutLocFile::makeOutLocFile(dp.pointOutType, ptOutFileName, dp.gdalPointDriver,
                    deg, true, dp.precision, dp.shapefileIdLen,
                    dp.kmlColor, dp.kmlWidth, dp.kmlName, dp.kmlDescription);
 

@@ -11,7 +11,7 @@ All changes are by Kevin Sahr, unless otherwise noted.
 - added SEQUENCE choice to parameter dggs_aperture_type
 - added new parameter dggs_aperture_sequence
 - added GDAL choice to parameter clip_subset_type
-- added GDAL and CULMEN choices to parameters cell_output_type and point_output_type
+- added GDAL choice to parameters cell_output_type and point_output_type
 - added new parameter cell_output_gdal_driver
 - added new parameter point_output_gdal_driver
 - added cell neighbor output, including parameters neighbor_output_type and neighbor_output_file_name

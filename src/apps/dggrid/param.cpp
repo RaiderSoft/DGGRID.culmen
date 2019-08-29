@@ -576,19 +576,19 @@ DgGridPList::init2 (void)
 
    ////// output parameters //////
 
-   // cell_output_type <NONE | AIGEN | GDAL | KML | GEOJSON | SHAPEFILE | CULMEN }
+   // cell_output_type <NONE | AIGEN | GDAL | KML | GEOJSON | SHAPEFILE >
    choices.push_back(new string("NONE"));
    choices.push_back(new string("AIGEN"));
    choices.push_back(new string("GDAL"));
    choices.push_back(new string("KML"));
    choices.push_back(new string("GEOJSON"));
    choices.push_back(new string("SHAPEFILE"));
-   choices.push_back(new string("CULMEN"));
+   //choices.push_back(new string("TEXT"));
    insertParam(new DgStringChoiceParam("cell_output_type", "AIGEN", 
                &choices));
    dgg::util::release(choices);
 
-   // point_output_type <NONE | AIGEN | GDAL | KML | GEOJSON | SHAPEFILE | TEXT | CULMEN>
+   // point_output_type <NONE | AIGEN | GDAL | KML | GEOJSON | SHAPEFILE | TEXT >
    choices.push_back(new string("NONE"));
    choices.push_back(new string("AIGEN"));
    choices.push_back(new string("GDAL"));
@@ -596,7 +596,6 @@ DgGridPList::init2 (void)
    choices.push_back(new string("GEOJSON"));
    choices.push_back(new string("SHAPEFILE"));
    choices.push_back(new string("TEXT"));
-   choices.push_back(new string("CULMEN"));
    insertParam(new DgStringChoiceParam("point_output_type", "NONE", 
                &choices));
    dgg::util::release(choices);
@@ -613,11 +612,11 @@ DgGridPList::init2 (void)
                &choices));
    dgg::util::release(choices);
 
-   // cell_output_gdal_driver <gdal driver type>
-   insertParam(new DgStringParam("cell_output_gdal_driver", "GeoJSON"));
+   // cell_output_gdal_format <gdal driver type>
+   insertParam(new DgStringParam("cell_output_gdal_format", "GeoJSON"));
 
-   // point_output_gdal_driver <gdal driver type>
-   insertParam(new DgStringParam("point_output_gdal_driver", "GeoJSON"));
+   // point_output_gdal_format <gdal driver type>
+   insertParam(new DgStringParam("point_output_gdal_format", "GeoJSON"));
 
    // cell_output_file_name <outputFileName>
    insertParam(new DgStringParam("cell_output_file_name", "cells"));
