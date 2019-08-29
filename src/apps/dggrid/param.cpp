@@ -374,19 +374,21 @@ DgGridPList::DgGridPList (void)
    dgg::util::release(choices);
 
    // dggs_type <CUSTOM | SUPERFUND | PLANETRISK | CULMEN |
-   //            ISEA3H | ISEA4H | ISEA43H | ISEA4T | ISEA4D |
-   //            FULLER3H | FULLER4H | FULLER43H | FULLER4T | FULLER4D>
+   //            ISEA3H | ISEA4H | ISEA7H | ISEA43H | ISEA4T | ISEA4D |
+   //            FULLER3H | FULLER4H | FULLER7H | FULLER43H | FULLER4T | FULLER4D>
    choices.push_back(new string("CUSTOM"));
    choices.push_back(new string("SUPERFUND"));
    choices.push_back(new string("PLANETRISK"));
    choices.push_back(new string("CULMEN"));
    choices.push_back(new string("ISEA3H")); 
    choices.push_back(new string("ISEA4H")); 
+   choices.push_back(new string("ISEA7H")); 
    choices.push_back(new string("ISEA43H")); 
    choices.push_back(new string("ISEA4T")); 
    choices.push_back(new string("ISEA4D")); 
    choices.push_back(new string("FULLER3H")); 
    choices.push_back(new string("FULLER4H")); 
+   choices.push_back(new string("FULLER7H")); 
    choices.push_back(new string("FULLER43H")); 
    choices.push_back(new string("FULLER4T")); 
    choices.push_back(new string("FULLER4D"));

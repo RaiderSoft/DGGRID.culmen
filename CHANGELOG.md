@@ -6,6 +6,7 @@ All changes are by Kevin Sahr, unless otherwise noted.
 ## [7.0] - 2019-08-01
 ### Added
 - added CULMEN/PLANETRISK choice to parameter dggs_type 
+- added ISEA7H and FULLER7H choices to parameter dggs_type 
 - added aperture 7 choice to parameter dggs_aperture 
 - added SEQUENCE choice to parameter dggs_aperture_type
 - added new parameter dggs_aperture_sequence
