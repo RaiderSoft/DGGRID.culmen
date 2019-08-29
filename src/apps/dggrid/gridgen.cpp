@@ -95,12 +95,13 @@ GridGenParam::GridGenParam (DgParamList& plist)
       else if (dummy == "GDAL") {
          useGDAL = true;
          clipGDAL  = true; 
-      } else if (dummy == "SEQNUMS")
-         seqToPoly = true;
+      } else if (dummy == "SEQNUMS") {
          if (isApSeq)
             ::report("clip_subset_type of SEQNUMS not supported for dggs_aperture_type of SEQUENCE", 
                      DgBase::Fatal);
-      else
+
+         seqToPoly = true;
+      } else
          ::report("Unrecognised value for 'clip_subset_type'", DgBase::Fatal);
 
       //// region file names

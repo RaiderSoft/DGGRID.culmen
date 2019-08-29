@@ -223,6 +223,12 @@ MainParam::MainParam (DgParamList& plist)
       aperture = dgg::util::from_string<int>(tmp);
    }
 
+   // simulate a pure aperture 7 grid using an aperture sequence
+   if (aperture == 7 && !isApSeq) {
+      isApSeq = true;
+      apSeq = DgApSeq("77777777777777777777777777777777777");
+   }
+
    getParamValue(plist, "dggs_num_placements", numGrids, false);
    getParamValue(plist, "dggs_proj", projType, false);
    getParamValue(plist, "dggs_vert0_azimuth", azimuthDegs, false);
@@ -753,7 +759,7 @@ DgGridPList::init2 (void)
    choices.push_back(new string("GEO")); 
    choices.push_back(new string("Q2DI")); 
    choices.push_back(new string("SEQNUM")); 
-   //choices.push_back(new string("INTERLEAVE")); 
+   choices.push_back(new string("INTERLEAVE")); 
    choices.push_back(new string("PLANE")); 
    choices.push_back(new string("Q2DD")); 
    choices.push_back(new string("PROJTRI")); 

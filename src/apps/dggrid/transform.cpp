@@ -153,8 +153,8 @@ void doTransform (TransformParam& dp)
    else if (dp.inAddType == "PROJTRI") pInRF = &dgg.projTriRF();
    else if (dp.inAddType == "VERTEX2DD") pInRF = &dgg.vertexRF();
    else if (dp.inAddType == "Q2DD") pInRF = &dgg.q2ddRF();
-   //else if (dp.inAddType == "INTERLEAVE") pInRF = &dgg.intRF();
-   //else if (dp.inAddType == "PLANE") pInRF = &dgg.planeRF();
+   else if (dp.inAddType == "INTERLEAVE") pInRF = &dgg.intRF();
+   else if (dp.inAddType == "PLANE") pInRF = &dgg.planeRF();
    else if (dp.inAddType == "Q2DI") pInRF = &dgg;
    else if (dp.inAddType == "SEQNUM") 
    {
@@ -176,8 +176,13 @@ void doTransform (TransformParam& dp)
    else if (dp.outAddType == "PROJTRI") pOutRF = &dgg.projTriRF();
    else if (dp.outAddType == "VERTEX2DD") pOutRF = &dgg.vertexRF();
    else if (dp.outAddType == "Q2DD") pOutRF = &dgg.q2ddRF();
-   else if (dp.outAddType == "INTERLEAVE") pOutRF = &dgg.intRF();
-   else if (dp.outAddType == "PLANE") pOutRF = &dgg.planeRF();
+   else if (dp.outAddType == "INTERLEAVE") {
+      if (dp.isApSeq)
+         ::report("output_address_type of INTERLEAVE not supported for dggs_aperture_type of SEQUENCE",
+                  DgBase::Fatal);
+
+      pOutRF = &dgg.intRF();
+   } else if (dp.outAddType == "PLANE") pOutRF = &dgg.planeRF();
    else if (dp.outAddType == "Q2DI") pOutRF = &dgg;
    else if (outAIG) pOutRF = &dgg;
    else if (dp.outAddType == "SEQNUM") 
