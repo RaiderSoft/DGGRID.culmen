@@ -47,7 +47,7 @@ const string DgHexSF::cs3rE = "B1BA4567";
 const string DgHexSF::cs3rF = "A1A345B7";
 
 unsigned long long int 
-DgHexSF::visitMe (GridGenParam& dp, const DgIDGGBase& dgg, 
+DgHexSF::visitMe (GridGenParam& dp, const DgIDGGSBase& dggs, const DgIDGGBase& dgg, 
                   const DgContCartRF& deg, DgEvalData* ed)
 {
    DgIVec2D coord2d;
@@ -94,7 +94,7 @@ cout << "accepted: " << quadNum_ << " " << coord2d
       DgPolygon verts(dgg);
       dgg.setVertices(*addLoc, verts, dp.nDensify);
 
-      ::outputCell(dp, dgg, *addLoc, verts, deg, superFundIndex());
+      ::outputCell(dp, dggs, dgg, *addLoc, verts, deg, superFundIndex());
 
       delete addLoc;
    }
@@ -108,9 +108,9 @@ cout << "accepted: " << quadNum_ << " " << coord2d
 }
 
 unsigned long long int 
-DgHexSF::depthFirstTraversal (GridGenParam& dp, const DgIDGGBase& dgg, 
-                              const DgContCartRF& deg, int numAp4Res,
-                              DgEvalData* ed)
+DgHexSF::depthFirstTraversal (GridGenParam& dp, const DgIDGGSBase& dggs, 
+       const DgIDGGBase& dgg, const DgContCartRF& deg, int numAp4Res,
+       DgEvalData* ed)
 {
 /*
 cout << "depthFirstTrav res: " << res_ 
@@ -118,7 +118,7 @@ cout << "depthFirstTrav res: " << res_
 */
 
    if (res_ == dgg.res()) 
-      return visitMe(dp, dgg, deg, ed);
+      return visitMe(dp, dggs, dgg, deg, ed);
 
    // otherwise recursively descend
 
@@ -150,7 +150,7 @@ cout << "depthFirstTrav res: " << res_
          center.addSf3Digit(startSFDigit);
       }
    
-      numAccepted = center.depthFirstTraversal(dp, dgg, deg, numAp4Res, ed);
+      numAccepted = center.depthFirstTraversal(dp, dggs, dgg, deg, numAp4Res, ed);
    }
    else // quadNum 1-10
    {
@@ -264,7 +264,7 @@ cout << "depthFirstTrav res: " << res_
       }
    
       unsigned long long int numAccepted = 
-            center.depthFirstTraversal(dp, dgg, deg, numAp4Res, ed);
+            center.depthFirstTraversal(dp, dggs, dgg, deg, numAp4Res, ed);
 
       int sfDigit = startSFDigit + 1;
       for (int d = 1; d < 8; d++)
@@ -285,7 +285,7 @@ cout << "depthFirstTrav res: " << res_
                h.addSf3Digit(sfDigit);
             }
 
-            numAccepted += h.depthFirstTraversal(dp, dgg, deg, numAp4Res, ed);
+            numAccepted += h.depthFirstTraversal(dp, dggs, dgg, deg, numAp4Res, ed);
             sfDigit++;
          }
       } // else quad 1-10

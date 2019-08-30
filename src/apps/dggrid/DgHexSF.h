@@ -34,6 +34,7 @@
 using namespace std;
 
 class GridGenParam;
+class DgIDGGSBase;
 class DgIDGGBase;
 class DgContCartRF;
 class DgEvalData;
@@ -109,11 +110,11 @@ class DgHexSF {
             { return !operator==(h); }
 
       unsigned long long int depthFirstTraversal (GridGenParam& dp, 
-                  const DgIDGGBase& dgg, const DgContCartRF& deg, int numAp4Res,
-                  DgEvalData* ed = NULL);
+                  const DgIDGGSBase& dggs, const DgIDGGBase& dgg, 
+                  const DgContCartRF& deg, int numAp4Res, DgEvalData* ed = NULL);
 
-      unsigned long long int visitMe (GridGenParam& dp, const DgIDGGBase& dgg,
-                          const DgContCartRF& deg, DgEvalData* ed);
+      unsigned long long int visitMe (GridGenParam& dp, const DgIDGGSBase& dggs, 
+                  const DgIDGGBase& dgg, const DgContCartRF& deg, DgEvalData* ed);
 
       DgHexSF downAp4 (void);
       DgHexSF downAp3 (void);

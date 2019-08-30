@@ -34,6 +34,7 @@
 #include "DgInShapefileAtt.h"
 
 class GridGenParam;
+class DgIDGGSBase;
 class DgIDGGBase;
 class DgContCartRF;
 class DgDiscRF2D;
@@ -155,7 +156,7 @@ class DgEvalData {
 
 // function prototypes
 
-void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
+void outputCell (GridGenParam& dp, const DgIDGGSBase& dggs, const DgIDGGBase& dgg,
                    const DgLocation& add2D, const DgPolygon& verts,
                    const DgContCartRF& deg, const string& label);
 

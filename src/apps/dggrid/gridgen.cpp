@@ -704,7 +704,7 @@ void genPoints (GridGenParam& dp, const DgIDGGBase& dgg, const DgQ2DICoord& add2
 } // void genPoints
 
 ////////////////////////////////////////////////////////////////////////////////
-void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
+void outputCell (GridGenParam& dp, const DgIDGGSBase& dggs, const DgIDGGBase& dgg,
                    const DgLocation& add2D, const DgPolygon& verts,
                    const DgContCartRF& deg, const string& label)
 {
@@ -886,8 +886,8 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
          dp.runStats.push(dgg.geoRF().dist(ctrGeo, neighbors[i]));
    }
 
-   const DgHexIDGG& hexdgg = static_cast<const DgHexIDGG&>(dgg);
-   const DgHexIDGGS& dggs = hexdgg.dggs();
+   //const DgHexIDGG& hexdgg = static_cast<const DgHexIDGG&>(dgg);
+   //const DgHexIDGGS& dggs = hexdgg.dggs();
    DgResAdd<DgQ2DICoord> q2diR(q2di, dgg.res());
    DgLocVector children;
    if (dp.chdOut) {
@@ -898,7 +898,8 @@ void outputCell (GridGenParam& dp, const DgIDGGBase& dgg,
 } // void outputCell
 
 ////////////////////////////////////////////////////////////////////////////////
-void outputCellAdd2D (GridGenParam& dp, const DgIDGGBase& dgg, const DgLocation& add2D, 
+void outputCellAdd2D (GridGenParam& dp, const DgIDGGSBase& dggs, 
+                 const DgIDGGBase& dgg, const DgLocation& add2D, 
                  const DgPolygon& verts, const DgContCartRF& deg)
 {
    // create the various output forms
@@ -910,7 +911,7 @@ void outputCellAdd2D (GridGenParam& dp, const DgIDGGBase& dgg, const DgLocation&
    else
       label = new string(dgg::util::to_string(sn));
 
-   outputCell(dp, dgg, add2D, verts, deg, *label);
+   outputCell(dp, dggs, dgg, add2D, verts, deg, *label);
    delete label;
 
 } // void outputCellAdd2D
@@ -923,11 +924,11 @@ void genGrid (GridGenParam& dp)
 
    DgRFNetwork net0;
    DgGeoSphRF geoRF(net0, dp.datum, dp.earthRadius);
-   const DgIDGGSBase *idggs = DgIDGGSBase::makeRF(net0, geoRF, dp.vert0,
+   const DgIDGGSBase *dggs = DgIDGGSBase::makeRF(net0, geoRF, dp.vert0,
              dp.azimuthDegs, dp.aperture, dp.actualRes+2, dp.gridTopo, "IDGGS",
              dp.projType, dp.isMixed43, dp.numAp4, dp.isSuperfund, dp.isApSeq, dp.apSeq);
 
-   const DgIDGGBase& dgg = idggs->idggBase(dp.actualRes);
+   const DgIDGGBase& dgg = dggs->idggBase(dp.actualRes);
 
    // set-up to convert to degrees
    DgGeoSphDegRF deg(geoRF, geoRF.name() + "Deg");
@@ -1061,7 +1062,7 @@ void genGrid (GridGenParam& dp)
         DgPolygon verts(dgg);
         dgg.setVertices(*loc, verts, dp.nDensify);
 
-        outputCellAdd2D(dp, dgg, *loc, verts, deg);
+        outputCellAdd2D(dp, *dggs, dgg, *loc, verts, deg);
 
         delete loc;
       }
@@ -1101,7 +1102,7 @@ void genGrid (GridGenParam& dp)
                DgPolygon verts(dgg);
                dgg.setVertices(*addLoc, verts, dp.nDensify);
 
-               outputCellAdd2D(dp, dgg, *addLoc, verts, deg);
+               outputCellAdd2D(dp, *dggs, dgg, *addLoc, verts, deg);
 
                dgg.bndRF().incrementLocation(*addLoc);
                if (!dgg.bndRF().validLocation(*addLoc)) break;
@@ -1115,7 +1116,7 @@ void genGrid (GridGenParam& dp)
          {
             DgHexSF baseTile(0, 0, 0, 0, true, q);
             baseTile.setType('P');
-            baseTile.depthFirstTraversal(dp, dgg, deg, 2);
+            baseTile.depthFirstTraversal(dp, *dggs, dgg, deg, 2);
          }
       }
    } else { // use clip regions
@@ -1184,7 +1185,7 @@ void genGrid (GridGenParam& dp)
 
             DgHexSF baseTile(0, 0, 0, 0, true, q);
             baseTile.setType('P');
-            baseTile.depthFirstTraversal(dp, dgg, deg, 2, &ed);
+            baseTile.depthFirstTraversal(dp, *dggs, dgg, deg, 2, &ed);
          }
          else // !dp.isSuperfund
          {
@@ -1278,7 +1279,7 @@ void genGrid (GridGenParam& dp)
                DgPolygon verts(dgg);
                dgg.setVertices(*addLoc, verts, dp.nDensify);
 
-               outputCellAdd2D(dp, dgg, *addLoc, verts, deg);
+               outputCellAdd2D(dp, *dggs, dgg, *addLoc, verts, deg);
 
                // check for special cases 
                if (q == 0 || q == 11) break; // only one cell
