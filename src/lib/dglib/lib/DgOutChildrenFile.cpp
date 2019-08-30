@@ -18,128 +18,53 @@
 *******************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////
 //
-// DgOutPRCellsFile.cpp: DgOutPRCellsFile class implementation
+// DgOutChildrenFile.cpp: DgOutChildrenFile class implementation
 //
 // Version 7.0 - Kevin Sahr, 12/14/14
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <list>
-#include <sstream>
-
-#include "DgOutPRCellsFile.h"
-#include "DgLocList.h"
-#include "DgPolygon.h"
-#include "DgLocation.h"
-#include "DgCell.h"
+#include "DgOutChildrenFile.h"
+#include "DgIDGGBase.h"
+#include "DgBoundedIDGG.h"
+#include "DgIDGG.h"
+#include "DgIDGGS.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-DgOutPRCellsFile::DgOutPRCellsFile (const DgRFBase& rfIn, 
-        const string& fileNameIn, int precision, DgReportLevel failLevel)
-   : DgOutLocTextFile (fileNameIn, rfIn, true, "cells", precision, failLevel)
+DgOutChildrenFile::DgOutChildrenFile (const string& fileName, 
+         const string& suffix, DgReportLevel failLevel)
+   : DgOutputStream (fileName, suffix, failLevel)
 {
-   if (rfIn.vecAddress(DgDVec2D(M_ZERO, M_ZERO)) == 0)
+
+} // DgOutChildrenFile::DgOutChildrenFile
+
+////////////////////////////////////////////////////////////////////////////////
+DgOutChildrenFile& 
+DgOutChildrenFile::insert (const DgIDGGBase& dgg, const DgLocation& center,
+           DgLocVector& vec)
+{
+//cout << "@@@@@ DgOutChildrenFile::insert:" << endl;
+//cout << " dgg: " << dgg << endl;
+//cout << " center: " << center << endl;
+//cout << " vec: " << vec << endl;
+   const DgIDGGS& dggs = *(dgg.dggs());
+   const DgIDGG& dggr = dggs.idgg(dgg.res() + 1);
+
+   unsigned long long int sn = dgg.bndRF().seqNum(center);
+   *this << sn;
+   for (int i = 0; i < vec.size(); i++)
    {
-      DgOutputStream::report("DgOutPRCellsFile::DgOutPRCellsFile(): RF " + rfIn.name() +
-             " must override the vecAddress() method", DgBase::Fatal);
-   }
-
-   setFormatStr();
-
-} // DgOutPRCellsFile::DgOutPRCellsFile
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-DgOutLocFile&
-DgOutPRCellsFile::insert (const DgDVec2D& pt)
-//
-// Put the point pt.
-//
-////////////////////////////////////////////////////////////////////////////////
-{
-   const int maxBuffSize = 200;
-   char buff[maxBuffSize];
-
-   // switch to lat/lon order
-   sprintf(buff, formatStr(), pt.y(), pt.x());
-
-   *this << buff;
-
-   return *this;
-
-} // DgOutLocFile& DgOutPRCellsFile::insert
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-DgOutLocFile&
-DgOutPRCellsFile::insert (DgLocation& loc, const string* label)
-//
-// Put the point loc.
-//
-////////////////////////////////////////////////////////////////////////////////
-{
-   DgOutputStream::report("DgOutPRCellsFile::insert(DgLocation): not defined.", DgBase::Fatal);
-   return *this;
-/*
-   rf().convert(&loc);
-
-   if (label)
-     *this << *label << " ";
-   else
-     *this << "0 ";
-
-   this->insert(rf().getVecLocation(loc));
-
-   return *this;
-*/
-
-} // DgOutLocFile& DgOutPRCellsFile::insert
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-DgOutLocFile&
-DgOutPRCellsFile::insert (DgLocVector& vec, const string* label, 
-                     const DgLocation* cent)
-//
-// Put the polyline vec.
-//
-////////////////////////////////////////////////////////////////////////////////
-{
-   DgOutputStream::report("DgOutPRCellsFile::insert(DgLocVector): not defined.", DgBase::Fatal);
-   return *this;
-
-} // DgOutLocFile& DgOutPRCellsFile::insert
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-DgOutLocFile&
-DgOutPRCellsFile::insert (DgPolygon& poly, const string* label, 
-                     const DgLocation* cent)
-//
-// Put the polygon poly.
-//
-////////////////////////////////////////////////////////////////////////////////
-{
-   rf().convert(poly);
-
-   // output the header line
-   if (label)
-     *this << *label;
-   else
-     *this << "0";
-
-   // output the vertices in reverse order (clockwise winding)
-   const vector<DgAddressBase*>& v = poly.addressVec();
-   for (int i = 0; i < (int) v.size(); i++)
-   {
-      this->insert(rf().getVecAddress(*v[i]));
+      DgLocation tmpLoc(vec[i]);
+      dggr.convert(&tmpLoc);
+      *this << " " << dggr.bndRF().seqNum(tmpLoc);
    }
 
    *this << endl;
 
    return *this;
 
-} // DgOutLocFile& DgOutPRCellsFile::insert
+} // DgOutChildrenFile::insert
 
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////

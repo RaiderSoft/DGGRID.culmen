@@ -42,8 +42,8 @@ using namespace std;
 #include "DgOutKMLfile.h"
 #include "DgOutPRPtsFile.h"
 #include "DgOutPRCellsFile.h"
-#include "DgOutPRNeighborsFile.h"
-#include "DgOutPRChildrenFile.h"
+#include "DgOutNeighborsFile.h"
+#include "DgOutChildrenFile.h"
 #include "DgHexIDGG.h"
 #include "DgHexIDGGS.h"
 #include "DgIDGGBase.h"
@@ -803,7 +803,7 @@ void outputCell (GridGenParam& dp, const DgIDGGSBase& dggs, const DgIDGGBase& dg
 
          string fileName = dp.neighborsOutFileName + string("_") +
                                        dgg::util::to_string(dp.nOutputFile);
-         dp.nbrOut = new DgOutPRNeighborsFile(fileName);
+         dp.nbrOut = new DgOutNeighborsFile(fileName);
       }
 
       if (dp.chdOut)
@@ -813,7 +813,7 @@ void outputCell (GridGenParam& dp, const DgIDGGSBase& dggs, const DgIDGGBase& dg
 
          string fileName = dp.childrenOutFileName + string("_") +
                                        dgg::util::to_string(dp.nOutputFile);
-         dp.chdOut = new DgOutPRChildrenFile(fileName, "chd");
+         dp.chdOut = new DgOutChildrenFile(fileName, "chd");
       }
    }
 
@@ -1009,11 +1009,11 @@ void genGrid (GridGenParam& dp)
    ///// PlanetRisk /////
    dp.nbrOut = NULL;
    if (!dp.neighborsOutType.compare("TEXT"))
-      dp.nbrOut = new DgOutPRNeighborsFile(neighborsOutFileName, "nbr");
+      dp.nbrOut = new DgOutNeighborsFile(neighborsOutFileName, "nbr");
 
    dp.chdOut = NULL;
    if (!dp.childrenOutType.compare("TEXT"))
-      dp.chdOut = new DgOutPRChildrenFile(childrenOutFileName, "chd");
+      dp.chdOut = new DgOutChildrenFile(childrenOutFileName, "chd");
 
    ////// do whole earth grid if applicable /////
 

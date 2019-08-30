@@ -49,8 +49,8 @@ class DgEvalData;
 class DgOutShapefile;
 class DgOutPRCellsFile;
 class DgOutPRPtsFile;
-class DgOutPRNeighborsFile;
-class DgOutPRChildrenFile;
+class DgOutNeighborsFile;
+class DgOutChildrenFile;
 class DgOutputStream;
 
 // constants
@@ -215,8 +215,8 @@ class GridGenParam : public MainParam {
       DgOutShapefile *cellOutShp, *ptOutShp;
       DgOutPRCellsFile *prCellOut;
       DgOutPRPtsFile *prPtOut;
-      DgOutPRNeighborsFile *nbrOut;
-      DgOutPRChildrenFile *chdOut;
+      DgOutNeighborsFile *nbrOut;
+      DgOutChildrenFile *chdOut;
 
       DgRunningStats runStats;
 

@@ -18,54 +18,60 @@
 *******************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////
 //
-// DgOutPRChildrenFile.h: DgOutPRChildrenFile class definitions
+// DgOutNeighborsFile.h: DgOutNeighborsFile class definitions
 //
 // Version 7.0 - Kevin Sahr, 12/14/14
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef DGOUTPRCHILDREN_H
-#define DGOUTPRCHILDREN_H
+#ifndef DGOUTNEIGHBORS_H
+#define DGOUTNEIGHBORS_H
 
 #include <string>
 #include <fstream>
 
 #include "DgUtil.h"
-#include "DgOutPRNeighborsFile.h"
+#include "DgOutputStream.h"
+#include "DgOutLocFile.h"
 
 using namespace std;
 
 class DgIDGGBase;
 
 ////////////////////////////////////////////////////////////////////////////////
-class DgOutPRChildrenFile : public DgOutPRNeighborsFile {
+class DgOutNeighborsFile : public DgOutputStream {
 
    public:
 
-      DgOutPRChildrenFile (const string& fileName, 
-                        const string& suffix = string("chd"), 
+      DgOutNeighborsFile (const string& fileName, 
+                        const string& suffix = string("nbr"), 
                         DgReportLevel failLevel = DgBase::Fatal);
 
-      virtual DgOutPRChildrenFile& insert (const DgIDGGBase& dgg, 
+      virtual DgOutNeighborsFile& insert (const DgIDGGBase& dgg, 
                    const DgLocation& center, DgLocVector& vec);
+
+      virtual bool open (const string& fileName, DgReportLevel failLevel = DgBase::Fatal) 
+              { return DgOutputStream::open(fileName, failLevel); }
+
+      virtual void close (void) { DgOutputStream::close(); }
 };
 
-inline DgOutPRChildrenFile& operator<< (DgOutPRChildrenFile& file, const char* str)
+inline DgOutNeighborsFile& operator<< (DgOutNeighborsFile& file, const char* str)
               { ostream& o = file; o << str; return file; }
 
-inline DgOutPRChildrenFile& operator<< (DgOutPRChildrenFile& file, const string& str)
+inline DgOutNeighborsFile& operator<< (DgOutNeighborsFile& file, const string& str)
               { ostream& o = file; o << str; return file; }
 
-inline DgOutPRChildrenFile& operator<< (DgOutPRChildrenFile& file, long double val)
+inline DgOutNeighborsFile& operator<< (DgOutNeighborsFile& file, long double val)
               { ostream& o = file; o << val; return file; }
 
-inline DgOutPRChildrenFile& operator<< (DgOutPRChildrenFile& file, float val)
+inline DgOutNeighborsFile& operator<< (DgOutNeighborsFile& file, float val)
               { ostream& o = file; o << val; return file; }
 
-inline DgOutPRChildrenFile& operator<< (DgOutPRChildrenFile& file, int val)
+inline DgOutNeighborsFile& operator<< (DgOutNeighborsFile& file, int val)
               { ostream& o = file; o << val; return file; }
 
-inline DgOutPRChildrenFile& operator<< (DgOutPRChildrenFile& file, unsigned long long val)
+inline DgOutNeighborsFile& operator<< (DgOutNeighborsFile& file, unsigned long long val)
               { ostream& o = file; o << val; return file; }
 
 #endif

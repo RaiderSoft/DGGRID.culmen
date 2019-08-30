@@ -92,10 +92,11 @@ DgIDGGBase::str2add (DgQ2DICoord* add, const char* str, char delimiter) const
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-DgIDGGBase::DgIDGGBase (const DgGeoSphRF& geoRF, unsigned int aperture, 
-                        int res, const string& name, unsigned int precision)
+DgIDGGBase::DgIDGGBase (const DgIDGGSBase* dggs, const DgGeoSphRF& geoRF, 
+                        unsigned int aperture, int res, const string& name, 
+                        unsigned int precision)
    : DgDiscRF<DgQ2DICoord, DgGeoCoord, long double>(geoRF.network(), geoRF, name),
-     sphIcosa_(0), aperture_(aperture), res_(res),
+     dggs_ (dggs), sphIcosa_(0), aperture_(aperture), res_(res),
      precision_(precision), grid2D_(0), grid2DS_(0), ccFrame_(0),
      projTriRF_(0), vertexRF_(0), q2ddRF_(0), bndRF_(0), intRF_(0), planeRF_(0)
 { 
@@ -106,7 +107,7 @@ DgIDGGBase::DgIDGGBase (const DgGeoSphRF& geoRF, unsigned int aperture,
 ////////////////////////////////////////////////////////////////////////////////
 DgIDGGBase::DgIDGGBase (const DgIDGGBase& rfIn)
    : DgDiscRF<DgQ2DICoord, DgGeoCoord, long double> (rfIn), 
-        sphIcosa_(0), aperture_(rfIn.aperture()), 
+        dggs_ (NULL), sphIcosa_(0), aperture_(rfIn.aperture()), 
         res_(rfIn.res()), precision_(rfIn.precision()), 
         grid2D_(0), grid2DS_(0), ccFrame_(0), projTriRF_(0), 
         vertexRF_(0), q2ddRF_(0), bndRF_(0), intRF_(0), planeRF_(0)

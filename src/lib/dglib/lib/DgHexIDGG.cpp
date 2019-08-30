@@ -40,8 +40,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 DgHexIDGG::DgHexIDGG (const DgHexIDGGS& dggs, unsigned int aperture,
               int res, const string& name, unsigned int precision)
-   : DgIDGGBase (dggs.geoRF(), aperture, res, name, precision),
-	dggs_ (dggs), scaleFac_ (1.0L), rotRads_ (0.0L)
+   : DgIDGGBase (&dggs, dggs.geoRF(), aperture, res, name, precision),
+	   scaleFac_ (1.0L), rotRads_ (0.0L)
 { 
    initialize();
 
@@ -49,9 +49,9 @@ DgHexIDGG::DgHexIDGG (const DgHexIDGGS& dggs, unsigned int aperture,
 
 ////////////////////////////////////////////////////////////////////////////////
 DgHexIDGG::DgHexIDGG (const DgHexIDGG& rfIn)
-   : DgIDGGBase (rfIn.geoRF(), rfIn.aperture(), 
+   : DgIDGGBase (rfIn.dggs(), rfIn.geoRF(), rfIn.aperture(), 
                  rfIn.res(), rfIn.name(), rfIn.precision()),
-	dggs_ (rfIn.dggs()), scaleFac_ (rfIn.scaleFac()), rotRads_ (rfIn.rotRads())
+	scaleFac_ (rfIn.scaleFac()), rotRads_ (rfIn.rotRads())
 { 
    initialize();
 
@@ -61,11 +61,16 @@ DgHexIDGG::DgHexIDGG (const DgHexIDGG& rfIn)
 DgHexIDGG::~DgHexIDGG (void) { }
 
 ////////////////////////////////////////////////////////////////////////////////
-const DgGeoSphRF& DgHexIDGG::geoRF    (void) const { return dggs_.geoRF(); }
-const DgGeoCoord& DgHexIDGG::vert0    (void) const { return dggs_.vert0(); }
-long double       DgHexIDGG::azDegs   (void) const { return dggs_.azDegs(); }
-const string&     DgHexIDGG::projType (void) const { return dggs_.projType(); }
-const string&     DgHexIDGG::gridTopo (void) const { return dggs_.gridTopo(); }
+const DgHexIDGGS& 
+DgHexIDGG::hexDggs (void) const 
+{ return *(static_cast<const DgHexIDGGS*>(dggs())); }
+
+////////////////////////////////////////////////////////////////////////////////
+const DgGeoSphRF& DgHexIDGG::geoRF    (void) const { return dggs()->geoRF(); }
+const DgGeoCoord& DgHexIDGG::vert0    (void) const { return dggs()->vert0(); }
+long double       DgHexIDGG::azDegs   (void) const { return dggs()->azDegs(); }
+const string&     DgHexIDGG::projType (void) const { return dggs()->projType(); }
+const string&     DgHexIDGG::gridTopo (void) const { return dggs()->gridTopo(); }
 
 ////////////////////////////////////////////////////////////////////////////////
 void
@@ -106,7 +111,7 @@ DgHexIDGG::initialize (void)
    // get actual parent values if there is a parent grid
    if (res() > 0) 
    {
-      const DgHexIDGG& parentIDGG = dggs().hexIdgg(res() - 1);
+      const DgHexIDGG& parentIDGG = hexDggs().hexIdgg(res() - 1);
 
       parentIsClassI = parentIDGG.isClassI();
       parentIsClassIII = parentIDGG.isClassIII();
@@ -141,7 +146,7 @@ DgHexIDGG::initialize (void)
    // set-up local network to scale so that quad (and consequently tri) edge 
    // length is 1.0
    ccFrame_ = new DgContCartRF(locNet_, name() + "CC1");
-   grid2DS_ = new DgHexGrid2DS(locNet_, ccFrame(), allocRes() + 1, dggs().apSeq(),
+   grid2DS_ = new DgHexGrid2DS(locNet_, ccFrame(), allocRes() + 1, hexDggs().apSeq(),
         name() + string("H2DS"));
    //cout << "== NEW GRID2DS:" << endl;
    //cout << *grid2DS_;

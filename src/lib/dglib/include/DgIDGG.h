@@ -31,6 +31,8 @@
 #include "DgIDGGBase.h"
 #include "DgApSeq.h"
 
+class DgIDGGSBase;
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -42,7 +44,7 @@ class DgIDGG : public DgIDGGBase {
 
    public:
 
-      DgIDGG (const DgGeoSphRF& geoRFIn, const DgGeoCoord& vert0,
+      DgIDGG (const DgIDGGSBase* dggs, const DgGeoSphRF& geoRFIn, const DgGeoCoord& vert0,
               long double azDegs, unsigned int apertureIn, int resIn, 
               const string& nameIn = "IDGG", 
               const string& gridTopoIn = string("HEXAGON"),

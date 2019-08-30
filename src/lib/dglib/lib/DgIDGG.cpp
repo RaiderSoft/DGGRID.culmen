@@ -41,12 +41,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-DgIDGG::DgIDGG (const DgGeoSphRF& geoRF, const DgGeoCoord& vert0, 
+DgIDGG::DgIDGG (const DgIDGGSBase* dggs, const DgGeoSphRF& geoRF, const DgGeoCoord& vert0, 
        long double azDegs, unsigned int aperture, int res, const string& name,
        const string& gridTopo, const string& projType, bool isMixed43, 
        int numAp4, bool isSuperfund, int sfRes, bool isApSeq, const DgApSeq& apSeq,
        unsigned int precision)
-   : DgIDGGBase (geoRF, aperture, res, name, precision),
+   : DgIDGGBase (dggs, geoRF, aperture, res, name, precision),
      geoRF_(geoRF), vert0_(vert0), azDegs_(azDegs), gridTopo_(gridTopo), 
      projType_(projType), isApSeq_ (isApSeq), apSeq_ (apSeq), isMixed43_(isMixed43), 
      numAp4_(numAp4), isSuperfund_(isSuperfund), sfRes_ (sfRes)
@@ -57,7 +57,7 @@ DgIDGG::DgIDGG (const DgGeoSphRF& geoRF, const DgGeoCoord& vert0,
 
 ////////////////////////////////////////////////////////////////////////////////
 DgIDGG::DgIDGG (const DgIDGG& rfIn)
-   : DgIDGGBase (rfIn.geoRF(), rfIn.aperture(), 
+   : DgIDGGBase (NULL, rfIn.geoRF(), rfIn.aperture(), 
                  rfIn.res(), rfIn.name(), rfIn.precision()),
         geoRF_(rfIn.geoRF()), vert0_(rfIn.vert0()), 
         azDegs_(rfIn.azDegs()), gridTopo_(rfIn.gridTopo()), 

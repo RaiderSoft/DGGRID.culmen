@@ -132,10 +132,10 @@ DgIDGGS::DgIDGGS (DgRFNetwork& network, const DgGeoSphRF& backFrame,
    for (int i = 0; i < nRes; i++)
    {
       if (!isSuperfund)
-         (*grids_)[i] = new DgIDGG(backFrame, vert0, azDegs, aperture, i,
+         (*grids_)[i] = new DgIDGG(this, backFrame, vert0, azDegs, aperture, i,
             "DDG", gridTopo, projType, isMixed43, numAp4, isSuperfund);
       else
-         (*grids_)[i] = new DgIDGG(backFrame, vert0, azDegs, aperture, i,
+         (*grids_)[i] = new DgIDGG(this, backFrame, vert0, azDegs, aperture, i,
             "DDG", gridTopo, projType, isMixed43, numAp4, isSuperfund,
             actualRes2sfRes(i));
 

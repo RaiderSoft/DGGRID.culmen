@@ -51,7 +51,7 @@ class DgHexIDGG : public DgIDGGBase {
 
       virtual ~DgHexIDGG (void);
 
-      const DgHexIDGGS& dggs (void) const { return dggs_; }
+      const DgHexIDGGS& hexDggs (void) const;
 
       virtual const DgGeoSphRF& geoRF    (void) const;
       virtual const DgGeoCoord& vert0    (void) const;
@@ -68,8 +68,6 @@ class DgHexIDGG : public DgIDGGBase {
       void initialize (void);
 
    private:
-
-      const DgHexIDGGS& dggs_;
 
       long double scaleFac_;
       long double rotRads_;

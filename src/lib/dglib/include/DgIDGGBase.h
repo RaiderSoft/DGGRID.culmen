@@ -30,6 +30,8 @@
 
 #include "DgIDGGutil.h"
 
+class DgIDGGSBase;
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -41,13 +43,15 @@ class DgIDGGBase : public DgDiscRF<DgQ2DICoord, DgGeoCoord, long double> {
 
    public:
 
-      DgIDGGBase (const DgGeoSphRF& geoRFIn, unsigned int apertureIn, 
-                  int resIn, const string& nameIn = "IDGG", 
+      DgIDGGBase (const DgIDGGSBase* dggs, const DgGeoSphRF& geoRFIn, 
+                  unsigned int apertureIn, int resIn, const string& nameIn = "IDGG", 
                   unsigned int precisionIn = DEFAULT_PRECISION);
 
       DgIDGGBase (const DgIDGGBase& grd);
 
       virtual ~DgIDGGBase();
+
+      const DgIDGGSBase* dggs (void) const { return dggs_; }
 
       virtual const DgGeoSphRF& geoRF    (void) const = 0;
       virtual const DgGeoCoord& vert0    (void) const = 0;
@@ -151,6 +155,8 @@ class DgIDGGBase : public DgDiscRF<DgQ2DICoord, DgGeoCoord, long double> {
       virtual void createConverters (void);
 
       const DgDiscRFS2D& grid2DS (void) const { return *grid2DS_; }
+
+      const DgIDGGSBase* dggs_;
 
       DgSphIcosa* sphIcosa_;
 

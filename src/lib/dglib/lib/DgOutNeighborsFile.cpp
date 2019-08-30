@@ -18,13 +18,13 @@
 *******************************************************************************/
 ////////////////////////////////////////////////////////////////////////////////
 //
-// DgOutPRChildrenFile.cpp: DgOutPRChildrenFile class implementation
+// DgOutNeighborsFile.cpp: DgOutNeighborsFile class implementation
 //
 // Version 7.0 - Kevin Sahr, 12/14/14
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "DgOutPRChildrenFile.h"
+#include "DgOutNeighborsFile.h"
 #include "DgIDGGBase.h"
 #include "DgBoundedIDGG.h"
 #include "DgHexIDGG.h"
@@ -32,40 +32,39 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-DgOutPRChildrenFile::DgOutPRChildrenFile (const string& fileName, 
+DgOutNeighborsFile::DgOutNeighborsFile (const string& fileName, 
          const string& suffix, DgReportLevel failLevel)
-   : DgOutPRNeighborsFile (fileName, suffix, failLevel)
+   : DgOutputStream (fileName, suffix, failLevel)
 {
 
-} // DgOutPRChildrenFile::DgOutPRChildrenFile
+} // DgOutNeighborsFile::DgOutNeighborsFile
 
 ////////////////////////////////////////////////////////////////////////////////
-DgOutPRChildrenFile& 
-DgOutPRChildrenFile::insert (const DgIDGGBase& dgg, const DgLocation& center,
+DgOutNeighborsFile& 
+DgOutNeighborsFile::insert (const DgIDGGBase& dgg, const DgLocation& center,
            DgLocVector& vec)
 {
-//cout << "@@@@@ DgOutPRChildrenFile::insert:" << endl;
-//cout << " dgg: " << dgg << endl;
-//cout << " center: " << center << endl;
-//cout << " vec: " << vec << endl;
+/*
+cout << "@@@@@ DgOutNeighborsFile::insert:" << endl;
+cout << " dgg: " << dgg << endl;
+cout << " center: " << center << endl;
+cout << " vec: " << vec << endl;
    const DgHexIDGG& hexdgg = static_cast<const DgHexIDGG&>(dgg);
    const DgHexIDGGS& dggs = hexdgg.dggs();
    const DgHexIDGG& dggr = dggs.hexIdgg(dgg.res() + 1);
-
+*/
    unsigned long long int sn = dgg.bndRF().seqNum(center);
    *this << sn;
    for (int i = 0; i < vec.size(); i++)
    {
-      DgLocation tmpLoc(vec[i]);
-      dggr.convert(&tmpLoc);
-      *this << " " << dggr.bndRF().seqNum(tmpLoc);
+      *this << " " << dgg.bndRF().seqNum(vec[i]);
    }
 
    *this << endl;
 
    return *this;
 
-} // DgOutPRChildrenFile::insert
+} // DgOutNeighborsFile::insert
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
