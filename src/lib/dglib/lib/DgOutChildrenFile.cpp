@@ -48,8 +48,8 @@ DgOutChildrenFile::insert (const DgIDGGBase& dgg, const DgLocation& center,
 //cout << " dgg: " << dgg << endl;
 //cout << " center: " << center << endl;
 //cout << " vec: " << vec << endl;
-   const DgIDGGS& dggs = *(dgg.dggs());
-   const DgIDGG& dggr = dggs.idgg(dgg.res() + 1);
+   const DgIDGGSBase& dggs = *(dgg.dggs());
+   const DgIDGGBase& dggr = dggs.idggBase(dgg.res() + 1);
 
    unsigned long long int sn = dgg.bndRF().seqNum(center);
    *this << sn;

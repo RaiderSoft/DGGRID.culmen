@@ -14,9 +14,9 @@ All changes are by Kevin Sahr, unless otherwise noted.
 - added GDAL choice to parameters cell_output_type and point_output_type
 - added new parameter cell_output_gdal_format
 - added new parameter point_output_gdal_format
-
 - added cell neighbor output, including parameters neighbor_output_type and neighbor_output_file_name
 - added cell children output, including parameters children_output_type and children_output_file_name
+
 - added parameters output_file_start_num and output_file_last_num
 - restored INTERLEAVE choice to parameter output_address_type with corrected error messages
 ### Changed

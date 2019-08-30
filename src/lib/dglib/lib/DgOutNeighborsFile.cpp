@@ -27,8 +27,6 @@
 #include "DgOutNeighborsFile.h"
 #include "DgIDGGBase.h"
 #include "DgBoundedIDGG.h"
-#include "DgHexIDGG.h"
-#include "DgHexIDGGS.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,15 +42,6 @@ DgOutNeighborsFile&
 DgOutNeighborsFile::insert (const DgIDGGBase& dgg, const DgLocation& center,
            DgLocVector& vec)
 {
-/*
-cout << "@@@@@ DgOutNeighborsFile::insert:" << endl;
-cout << " dgg: " << dgg << endl;
-cout << " center: " << center << endl;
-cout << " vec: " << vec << endl;
-   const DgHexIDGG& hexdgg = static_cast<const DgHexIDGG&>(dgg);
-   const DgHexIDGGS& dggs = hexdgg.dggs();
-   const DgHexIDGG& dggr = dggs.hexIdgg(dgg.res() + 1);
-*/
    unsigned long long int sn = dgg.bndRF().seqNum(center);
    *this << sn;
    for (int i = 0; i < vec.size(); i++)
