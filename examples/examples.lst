@@ -6,13 +6,13 @@ culmenClipHiRes
 culmenClipMulti
 culmenTable
 determineRes
-gdalTest
-gdalTest2
+gdalExample
 gridgenGeoJSON
 gridgenMixedSHP
 gridgenPureKML
 hiRes
 icosahedron
+isea7hGen
 mixedAperture
 seqnums
 superfundGrid

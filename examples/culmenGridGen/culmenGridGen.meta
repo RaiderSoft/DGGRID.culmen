@@ -20,10 +20,10 @@ geodetic_densify 0.0
 
 # specify the output using GDAL-supported file formats
 cell_output_type GDAL
-cell_output_gdal_driver KML
+cell_output_gdal_format KML
 cell_output_file_name outputfiles/cells.kml
 point_output_type GDAL
-point_output_gdal_driver GeoJSON
+point_output_gdal_format GeoJSON
 point_output_file_name outputfiles/points.geojson
 neighbor_output_type TEXT
 neighbor_output_file_name outputfiles/neighbors
