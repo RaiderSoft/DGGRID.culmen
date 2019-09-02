@@ -46,7 +46,7 @@ children_output_type TEXT (user set)
 children_output_file_name outputfiles/children (user set)
 update_frequency 100000 (default)
 max_cells_per_output_file 0 (default)
-output_start_seqnum 1 (default)
+output_first_seqnum 1 (default)
 output_last_seqnum 18446744073709551615 (default)
 verbosity 0 (default)
 
