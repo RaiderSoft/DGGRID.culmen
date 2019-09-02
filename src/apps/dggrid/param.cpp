@@ -722,11 +722,11 @@ DgGridPList::init2 (void)
    //  max_cells_per_output_file <int> (v >= 0)
    insertParam(new DgULIntParam("max_cells_per_output_file", 0, 0, ULONG_MAX, true));
 
-   //  output_file_start_num <int> (v >= 0)
-   insertParam(new DgULIntParam("output_file_start_num", 1, 0, ULONG_MAX, true));
+   //  output_first_seqnum <int> (v >= 0)
+   insertParam(new DgULIntParam("output_first_seqnum", 1, 0, ULONG_MAX, true));
 
-   //  output_file_last_num <int> (v >= 0)
-   insertParam(new DgULIntParam("output_file_last_num", ULONG_MAX, 0, ULONG_MAX, true));
+   //  output_last_seqnum <int> (v >= 0)
+   insertParam(new DgULIntParam("output_last_seqnum", ULONG_MAX, 0, ULONG_MAX, true));
 
    //  verbosity <int> (0 <= v <= 3)
    insertParam(new DgIntParam("verbosity", 0, 0, 3));

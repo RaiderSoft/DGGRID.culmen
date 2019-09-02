@@ -164,8 +164,8 @@ GridGenParam::GridGenParam (DgParamList& plist)
 
       getParamValue(plist, "update_frequency", updateFreq, false);
       getParamValue(plist, "max_cells_per_output_file", maxCellsPerFile, false);
-      getParamValue(plist, "output_file_start_num", outFileStartNum, false);
-      getParamValue(plist, "output_file_last_num", outFileLastNum, false);
+      getParamValue(plist, "output_first_seqnum", outFirstSeqNum, false);
+      getParamValue(plist, "output_last_seqnum", outLastSeqNum, false);
 
       string outLblType("GLOBAL_SEQUENCE");
       getParamValue(plist, "output_cell_label_type", outLblType, false);
@@ -713,8 +713,6 @@ void outputCell (GridGenParam& dp, const DgIDGGSBase& dggs, const DgIDGGBase& dg
    if (dp.maxCellsPerFile && dp.nCellsOutputToFile > dp.maxCellsPerFile) {
       dp.nCellsOutputToFile = 1;
       dp.nOutputFile++;
-      if (dp.nOutputFile > dp.outFileLastNum)
-         return;
 
       if (dp.cellOut) {
          delete dp.cellOut;
@@ -936,7 +934,7 @@ void genGrid (GridGenParam& dp)
    // create output files that rely on having the RF's created
 
    dp.nCellsOutputToFile = 0;
-   dp.nOutputFile = dp.outFileStartNum;
+   dp.nOutputFile = 1;
 
    string cellOutFileName = dp.cellOutFileName;
    string ptOutFileName = dp.ptOutFileName;
@@ -1071,15 +1069,16 @@ void genGrid (GridGenParam& dp)
       dp.nCellsTested = 0;
       if (!dp.isSuperfund)
       {
-         unsigned long long int startCell = dp.maxCellsPerFile * (dp.outFileStartNum - 1);
+         unsigned long long int startCell = dp.outFirstSeqNum - 1;
+         //unsigned long long int startCell = dp.maxCellsPerFile * (dp.outFirstSeqNum - 1);
          DgLocation* addLoc = new DgLocation(dgg.bndRF().first());
          bool more = true;
 
          // skip cells up to the first desired output file; this needs to be done
          // with seqNum to address converters
-         while (dp.nCellsAccepted < startCell)
+         while (dp.nCellsTested < startCell)
          {
-            dp.nCellsAccepted++;
+            //dp.nCellsAccepted++;
             dp.nCellsTested++;
             outputStatus(dp);
 
@@ -1093,7 +1092,7 @@ void genGrid (GridGenParam& dp)
 
          if (more)
          {
-            while (1)
+            while (dp.nCellsTested < dp.outLastSeqNum)
             {
                dp.nCellsAccepted++;
                dp.nCellsTested++;

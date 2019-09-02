@@ -230,8 +230,8 @@ class GridGenParam : public MainParam {
 
       unsigned long int updateFreq; // how often to output updates         
       unsigned long int maxCellsPerFile; // max cells in a single output file
-      unsigned long int outFileStartNum; // multi-part file number to begin generation
-      unsigned long int outFileLastNum; // multi-part file number where generation ends
+      unsigned long int outFirstSeqNum;  // start generating with this seqnum
+      unsigned long int outLastSeqNum;   //  generate through this one
 
       long double geoDens;          // max arc length in radians
 
