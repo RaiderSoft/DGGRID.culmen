@@ -658,7 +658,7 @@ GeoCoord GCmidpoint(const GeoCoord& pp1, const GeoCoord& pp2)
 /******************************************************************************/
 long double Azimuth(const GeoCoord& pt1, const GeoCoord& pt2)
 /*
-  return the Azimuth of pt2 relatived to pt1  
+  return the azimuth of pt2 relatived to pt1  
   output azimuth unit is radius
 */
  {

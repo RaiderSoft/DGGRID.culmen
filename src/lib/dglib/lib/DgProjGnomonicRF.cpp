@@ -26,31 +26,13 @@
 
 #include "DgProjGnomonicRF.h"
 #include "DgEllipsoidRF.h"
-#include "proj4.h"
-
-#define EPS10 1.e-10L
-#define N_POLE 0
-#define S_POLE 1
-#define EQUIT  2
-#define OBLIQ  3
+#include "DgGeoSphRF.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 DgProjGnomonicRF::DgProjGnomonicRF(DgRFNetwork& networkIn, const string& nameIn,
-       const DgGeoCoord& proj0In, long double x0In, long double y0In, long double k0In, 
-       long double to_meterIn, long double fr_meterIn)
-   : DgGeoProjRF (networkIn, nameIn, proj0In, x0In, y0In, k0In, 
-                  to_meterIn, fr_meterIn)
+       const DgGeoCoord& proj0In, long double localUpAzimuthIn)
+   : DgGeoProjRF (networkIn, nameIn, proj0In), localUpAzimuth_ (localUpAzimuthIn)
 { 
-   if (fabsl(fabsl(phi0()) - M_PI_2) < EPS10)
-      mode_ = phi0() < 0.0L ? S_POLE : N_POLE;
-   else if (fabsl(phi0()) < EPS10)
-      mode_ = EQUIT;
-   else {
-      mode_ = OBLIQ;
-      sinph0_ = sinl(phi0());
-      cosph0_ = cosl(phi0());
-   }
-
 } // DgProjGnomonicRF::DgProjGnomonicRF
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,58 +40,31 @@ DgDVec2D
 DgProjGnomonicRF::projForward (const DgGeoCoord& addIn,
                                const DgEllipsoidRF& e) const
 {
-   //cout << "gnom projForward: " << *this << " coord: " << addIn << endl;
-
    DgDVec2D xy(DgDVec2D::undefDgDVec2D);
 
-   long double  coslam, cosphi, sinphi;
+   // determine distance on the sphere from the projection center point
+   double r = DgGeoCoord::gcDist(proj0(), addIn);
 
-   sinphi = sinl(addIn.lat());
-   cosphi = cosl(addIn.lat());
-   coslam = cosl(addIn.lon());
-
-   switch (mode_) {
-   case EQUIT:
-      xy.setY(cosphi * coslam);
-      break;
-   case OBLIQ:
-      xy.setY(sinph0_ * sinphi + cosph0_ * cosphi * coslam);
-      break;
-   case S_POLE:
-      xy.setY(- sinphi);
-      break;
-   case N_POLE:
-      xy.setY(sinphi);
-      break;
+   if (r < M_EPSILON) {
+       xy.setX(0.0L);
+       xy.setY(0.0L);
+       return xy;
    }
 
-   if (xy.y() <= EPS10) 
-   {
-      ::report(string("DgProjGnomonicRF::projForward() point out of range\n") +
-           string("proj0: ") + string(proj0()) + 
-           string("\nprojecting point: ") + string(addIn), DgBase::Fatal);
-   }
+   // find CCW theta from local "up" azimuth
+   double theta = localUpAzimuth() - DgGeoSphRF::azimuth(proj0(), addIn);
+   if (theta < 0.0L) theta += M_2PI;
+   if (theta >= M_2PI) theta -= M_2PI;
 
-   xy.setY(1.0L / xy.y());
-   xy.setX(xy.y() * cosphi * sinl(addIn.lon()));
+   // gnomonic projection scaling of r
+   r = tan(r);
+   // scale more for quad?
 
-   switch (mode_) {
-   case EQUIT:
-      xy.setY(xy.y() * sinphi);
-      break;
-   case OBLIQ:
-      xy.setY(xy.y() * (cosph0_ * sinphi - sinph0_ * cosphi * coslam));
-      break;
-   case N_POLE:
-      coslam = - coslam;
-   case S_POLE:
-      xy.setY(xy.y() * cosphi * coslam);
-      break;
-   }
+   // convert to cartesian coordinates
+   xy.setX(r * cos(theta));
+   xy.setY(r * sin(theta));
 
-   //cout << "     => " << xy << endl;
-
-   return (xy);
+   return xy;
 
 } // DgDVec2D DgProjGnomonicRF::projForward
 
@@ -117,53 +72,25 @@ DgProjGnomonicRF::projForward (const DgGeoCoord& addIn,
 DgGeoCoord
 DgProjGnomonicRF::projInverse (const DgDVec2D& addIn, 
                                const DgEllipsoidRF& e) const
-//
-// spheroid only; needs to be verified at some point
-//
 {
-   DgDVec2D xy(addIn);
-   DgGeoCoord lp;
+   // calculate planar polar coordinates (r, theta)
+   double r = addIn.magnitude();
+   if (r < M_EPSILON) return proj0();
 
-   long double  rh, cosz, sinz;
+   double theta = atan2(addIn.y(), addIn.x());
 
-   rh = hypot(xy.x(), xy.y());
-   lp.setLat(atanl(rh));
-   sinz = sinl(lp.lat());
-   cosz = sqrtl(1.0L - sinz * sinz);
-   if (fabsl(rh) <= EPS10) {
-      lp.setLat(phi0());
-      lp.setLon(0.0L);
-   } else {
-      switch (mode_) {
-      case OBLIQ:
-         lp.setLat(cosz * sinph0_ + xy.y() * sinz * cosph0_ / rh);
-         if (fabsl(lp.lat()) >= 1.0L)
-            lp.setLat(lp.lat() > 0.0L ? M_PI_2 : - M_PI_2);
-         else
-            lp.setLat(asinl(lp.lat()));
-         xy.setY((cosz - sinph0_ * sinl(lp.lat())) * rh);
-         xy.setX(xy.x() * sinz * cosph0_);
-         break;
-      case EQUIT:
-         lp.setLat(xy.y() * sinz / rh);
-         if (fabsl(lp.lat()) >= 1.0L)
-            lp.setLat(lp.lat() > 0.0L ? M_PI_2 : - M_PI_2);
-         else
-            lp.setLat(asinl(lp.lat()));
-         xy.setY(cosz * rh);
-         xy.setX(xy.x() * sinz);
-         break;
-      case S_POLE:
-         lp.setLat(lp.lat() - M_PI_2);
-         break;
-      case N_POLE:
-         lp.setLat(M_PI_2 - lp.lat());
-         xy.setY(-xy.y());
-         break;
-      }
-      lp.setLon(atan2l(xy.x(), xy.y()));
-   }
-   return (lp);
+   // perform inverse gnomonic scaling of r
+   r = atan(r);
+
+   // find theta as an azimuth
+   theta = localUpAzimuth() - theta;
+   if (theta < 0.0L) theta += M_2PI;
+   if (theta >= M_2PI) theta -= M_2PI;
+
+   // point at (r,theta) from the projection center
+   DgGeoCoord geo = DgGeoSphRF::travelGC(proj0(), r, theta);
+
+   return geo;
 
 } // DgGeoCoord DgProjGnomonicRF::projInverse
 
