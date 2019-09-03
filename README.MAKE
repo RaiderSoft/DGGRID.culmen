@@ -9,8 +9,9 @@ These instructions assume you are on a Unix/Linux system.
 and are used by the Makefiles in the sub-directories. Edit this file if you
 want to add or remove build flags.
 
-In particular, set GDAL_HDR_LIB to the location of the gdal header files
-and GDAL_LIB to the gdal library file you want to link to DGGRID.
+In particular, you must set GDAL_HDR_LIB to the location of the gdal 
+header files and GDAL_LIB to the gdal library file you want to link to 
+DGGRID.
 
 **3. Build the application dggrid by executing: 
 
@@ -25,8 +26,24 @@ dggrid someMetaFileName.meta
 
 See the DGGRID documentation and examples for details of metafile contents.
 
-**5. Step 3 also builds the sample application DGGRID/src/apps/appex/appex, 
+**5. The directory DGGRID/examples contains a set of example DGGRID runs
+with pre-computed output. You can run these examples and automatically compare
+your output to the pre-computed output by going into DGGRID/examples and
+executing:
+
+   ./doexamples
+
+See the manual for more details on the parameters contained in the example
+metafiles.
+
+**6. If you have doxygen installed you can build the source code documentation
+by going into DGGRID/src and executing:
+
+   doxygen
+
+This will create a directory DGGRID/src/docs containing the generated
+source code documentation in pdf and html formats.
+
+Note: Step 3 also builds the sample application DGGRID/src/apps/appex/appex, 
 which is intended as a simple demonstration of using calls to the dglib 
 library to manipulate DGG cells in source code.
-
-If you have any questions please contact Kevin Sahr at sahrk@sou.edu.
