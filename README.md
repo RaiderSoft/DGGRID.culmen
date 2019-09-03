@@ -2,10 +2,8 @@
 
 ## General Information
 
-__DGGRID__ version 7.0b  
-released September 1, 2019  
-Southern Terra Cognita Laboratory  
-www.discreteglobalgrids.org  
+__DGGRID__ version 7.0b released September 1, 2019  
+Southern Terra Cognita Laboratory / www.discreteglobalgrids.org  
 
 
 __DGGRID__ is a command-line application designed to generate and manipulate 
@@ -28,11 +26,11 @@ __DGGRID__ is free software: you can redistribute it and/or modify it under the 
 
 __DGGRID__ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License along with the __DGGRID__ source code (see the file LICENSE).  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License along with the __DGGRID__ source code (see the file `LICENSE`).  If not, see <https://www.gnu.org/licenses/>.
 
 ## CREDITS
 
-__DGGRID__ was primarily written in C++ by Kevin Sahr. See the file CHANGELOG.md 
+__DGGRID__ was primarily written in C++ by Kevin Sahr. See the file `CHANGELOG.md` 
 for additional contributors. 
 
 The original __DGGRID__ specifications were developed by (in alphabetical order): 
