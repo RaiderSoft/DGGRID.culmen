@@ -3,11 +3,8 @@
 ## General Information
 
 __DGGRID__ version 7.0b  
-
 released September 1, 2019  
-
 Southern Terra Cognita Laboratory  
-
 www.discreteglobalgrids.org  
 
 
