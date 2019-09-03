@@ -18,7 +18,7 @@ Two directories should be included herein:
 
 User documentation for __DGGRID__ is in `dggridManualV70.pdf`.
 
-## TERMS OF USE
+## Terms of Use
 
 This documentation is part of __DGGRID__.
 
@@ -28,7 +28,7 @@ __DGGRID__ is distributed in the hope that it will be useful, but WITHOUT ANY WA
 
 You should have received a copy of the GNU Affero General Public License along with the __DGGRID__ source code (see the file `LICENSE`).  If not, see <https://www.gnu.org/licenses/>.
 
-## CREDITS
+## Credits
 
 __DGGRID__ was primarily written in C++ by Kevin Sahr. See the file `CHANGELOG.md` 
 for additional contributors. 
@@ -37,11 +37,11 @@ The original __DGGRID__ specifications were developed by (in alphabetical order)
 A. Ross Kiester, Tony Olsen, Barbara Rosenbaum, Kevin Sahr, Ann Whelan, and 
 Denis White.
 
-__DGGRID__ was made possible in part by funding from the US Environmental Protection Agency and Culmen International.
+__DGGRID__ was made possible in part by funding from the __US Environmental Protection Agency__ and __Culmen International__.
 
 __DGGRID__ requires the following external library (not included):
 
-- The Open Source Geospatial Foundation’s GDAL translator library for raster and vector geospatial data formats (see gdal.org)
+- The Open Source Geospatial Foundation’s GDAL translator library for raster and vector geospatial data formats (see http://www.gdal.org)
 
 __DGGRID__ uses the following external libraries (included with the __DGGRID__ source 
 code):
