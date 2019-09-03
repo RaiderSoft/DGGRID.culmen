@@ -295,8 +295,6 @@ class DgEllipsoidRF : public DgGeoDatumRF<DgGeoCoord, long double> {
 
       long double b_; // semi-minor axis in meters
 
-      // values used by PROJ4 projections
-
       long double f_; // flattening = (a - b) / a
 
       long double e_; // eccentricity

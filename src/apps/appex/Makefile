@@ -5,9 +5,8 @@ DEPS = $(SRCS:.cpp=.depends)
 include ../../MakeIncludes
 DGLIBDIR = ../../lib/dglib
 SHPLIBDIR = ../../lib/shapelib
-PROJ4LIBDIR = ../../lib/proj4lib
 INCDIRS = -I$(DGLIBDIR)/include -I$(SHPLIBDIR)/include \
-   -I$(PROJ4LIBDIR)/include $(ADD_INC_DIRS)
+   $(ADD_INC_DIRS)
 CCFLAGS  = ${INCDIRS} ${ADD_CPP_FLAGS} 
 LDLIBS = ${ADD_LD_LIBS}
 
@@ -29,7 +28,6 @@ link:
 
 $(LDLIBS):
 	cd $(SHPLIBDIR)/lib; ${MAKE}
-	cd $(PROJ4LIBDIR)/lib; ${MAKE}
 	cd $(DGLIBDIR)/lib; ${MAKE}
 
 clean:

@@ -30,8 +30,6 @@
 #include "Dg2WayConverter.h"
 #include "DgDVec2D.h"
 #include "DgGeoProjRF.h"
-#include "proj4.h"
-#include "errno.h"
 
 #define EPS 1.0e-12L
 
@@ -89,8 +87,13 @@ class DgGeoProjConverter :
 //cout << "cta: lp: " << lp << endl;
               lp.setLon(lp.lon() - p.lam0());  /* compute del lp.lam */
 //cout << "cta: lp: " << lp << endl;
-              if (!p.over())
-                 lp.setLon(adjlon(lp.lon())); /* adjust del longitude */
+              if (!p.over()) {
+                 if (lp.lon() < 0.0)
+                    lp.setLon(lp.lon() + M_2PI);
+                 if (lp.lon() > M_2PI)
+                    lp.setLon(lp.lon() - M_2PI);
+              }
+              
 //cout << "cta: lp: " << lp << endl;
 
               xy = p.projForward(lp, e);
@@ -173,8 +176,13 @@ class DgGeoInvProjConverter :
            lp = p.projInverse(xy, e);
 
            lp.setLon(lp.lon() + p.lam0()); // reduce from del lp.lam 
-           if (!p.over())
-              lp.setLon(adjlon(lp.lon())); // adjust longitude to CM 
+           if (!p.over()) {
+              if (lp.lon() < 0.0)
+                 lp.setLon(lp.lon() + M_2PI);
+              if (lp.lon() > M_2PI)
+                 lp.setLon(lp.lon() - M_2PI);
+           }
+              
            if (p.geoc() && fabsl(fabsl(lp.lat())-M_PI_2) > EPS)
               lp.setLat(atanl(e.one_es() * tanl(lp.lat())));
 

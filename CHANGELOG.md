@@ -20,6 +20,7 @@ All changes are by Kevin Sahr, unless otherwise noted.
 - restored INTERLEAVE choice to parameter output_address_type with corrected error messages
 ### Changed
 - released DGGRID under the AGPL license
+- gnomonic projection now calculated manually, allowing the removal of the PROJ4 library dependency
 - made DgSerialConverter conversion trace code more informative/legible
 - updated documentation and examples to reflect all changes
 
